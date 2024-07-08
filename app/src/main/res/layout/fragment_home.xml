@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.HomeFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            app:titleTextColor="@color/white"
+            app:title="Cash Books"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/blue"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_marginTop="56dp"
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="80dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recycleView"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <TextView
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:id="@+id/addBookBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_new_book"
+        android:layout_gravity="bottom|right"
+        android:background="@drawable/button_bg_add"
+        android:textColor="@color/white"
+        android:padding="16dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginRight="32dp"/>
+
+</FrameLayout>

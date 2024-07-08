@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.AllTransDisplayActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            app:titleTextColor="@color/white"
+            app:title="Total"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/blue"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+    </com.google.android.material.appbar.AppBarLayout>
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBar">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/AllFilter"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/baseline_filter_alt_24"
+                />
+            <LinearLayout
+                android:id="@+id/dateFilterLL"
+                android:background="@drawable/filter_bg"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="date"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/baseline_keyboard_arrow_down_24"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginLeft="8dp"
+                android:id="@+id/typeFilterLL"
+                android:background="@drawable/filter_bg"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="type"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/baseline_keyboard_arrow_down_24"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginLeft="8dp"
+                android:id="@+id/membersFilterLL"
+                android:background="@drawable/filter_bg"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="members"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/baseline_keyboard_arrow_down_24"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginLeft="8dp"
+                android:id="@+id/categoryFilterLL"
+                android:background="@drawable/filter_bg"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="category"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/baseline_keyboard_arrow_down_24"/>
+            </LinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        app:cardElevation="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="Total Balance"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/totalBalanceTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:gravity="right"
+                    android:text="75000"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/grey" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="Money In(+)"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/moneyInTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:gravity="right"
+                    android:text="75000"
+                    android:textColor="@color/green"
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="Money Out(-)"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/moneyOutTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:gravity="right"
+                    android:text="75000"
+                    android:textSize="12dp"
+                    android:textColor="@color/red"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="250dp"
+        android:layout_marginBottom="64dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        app:layout_constraintVertical_bias="0.783"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/moneyOutBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="#d00000"
+            android:text="Money Out"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/moneyInBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="#38b000"
+            android:text="Money In"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Expense Tracker</string>
+
+    <string name="walk_through_1h">Easily Add Your Transactions</string>
+    <string name="walk_through_2h">Share and Manage with Multiple Members</string>
+    <string name="walk_through_3h">Download Transactions in Excel Format</string>
+    <string name="walk_through_1d">Quickly and effortlessly log your expenses and income in a chosen book. Simply enter the details, categorize the transaction, and keep your finances organized with just a few taps.</string>
+    <string name="walk_through_2d">Collaborate on financial tracking by adding multiple members to a single book. Whether it\'s family, friends, or colleagues, everyone can contribute and keep track of shared expenses.</string>
+    <string name="walk_through_3d"> Need to analyze your spending or create detailed reports? Download all transactions for a particular book in a convenient Excel format with a single click, making data handling and sharing a breeze.</string>
+    <string name="intro_d">An expense tracker app helps users manage their finances by logging and categorizing expenses and income, providing real-time insights and visual reports to promote better financial planning and savings.</string>
+
+
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up_to_continue">Sign Up to Continue</string>
+    <string name="sign_in_to_continue">Sign In to Continue</string>
+    <string name="verify">verify</string>
+    <string name="enter_6_digit_otp">Enter 6 digit OTP</string>
+    <string name="send">Send</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add">Add</string>
+    <string name="enter_name">enter name</string>
+    <string name="rename_book_name">Rename Book Name</string>
+    <string name="delete_book">Delete Book</string>
+    <string name="add_members_to_book">Add members to book</string>
+    <string name="delete_members_from_book">Delete members from book</string>
+    <string name="add_new_book">Add new Book +</string>
+
+
+</resources>
