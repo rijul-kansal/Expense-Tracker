@@ -10,6 +10,7 @@ import com.learning.expencetracker.Model.AddMoneyTrans.AddMoneyTransInputModel
 import com.learning.expencetracker.Model.AddMoneyTrans.AddMoneyTransOutputModel
 import com.learning.expencetracker.Model.DeleteTrans.DeleteTransOutputModel
 import com.learning.expencetracker.Model.GetAllTrans.GetAllTransOutputModel
+import com.learning.expencetracker.Model.GetTransFilters.GetTransFilterOutputModel
 import com.learning.expencetracker.Model.UpdateSingleTrans.UpdateSingleTransInputModel
 import com.learning.expencetracker.Model.UpdateSingleTrans.UpdateSingleTransOutputModel
 import com.learning.expencetracker.Utils.Constants
@@ -52,9 +53,6 @@ class MoneyTransViewModel : ViewModel() {
         }
     }
     fun observerForAddNewTrans(): LiveData<AddMoneyTransOutputModel> = resultOfCreateNewTrans
-    fun clearCreateNewBook() {
-        resultOfCreateNewTrans.value = null
-    }
 
    // get all trans
     var resultOfGetAllTrans: MutableLiveData<GetAllTransOutputModel> = MutableLiveData()
@@ -88,10 +86,6 @@ class MoneyTransViewModel : ViewModel() {
         }
     }
     fun observerForGetAllTrans(): LiveData<GetAllTransOutputModel> = resultOfGetAllTrans
-    fun clearGetAllTrans() {
-        resultOfGetAllTrans.value = null
-    }
-
     // updateTrans
     var resultOfUpdateSingleTrans: MutableLiveData<UpdateSingleTransOutputModel> = MutableLiveData()
     fun updateSingleTrans(
@@ -125,9 +119,6 @@ class MoneyTransViewModel : ViewModel() {
         }
     }
     fun observerForUpdateSingleTrans(): LiveData<UpdateSingleTransOutputModel> = resultOfUpdateSingleTrans
-    fun clearUpdateSingleTrans() {
-        resultOfUpdateSingleTrans.value = null
-    }
 
 
     // delete single  trans
@@ -162,8 +153,42 @@ class MoneyTransViewModel : ViewModel() {
         }
     }
     fun observerForDeleteTrans(): LiveData<DeleteTransOutputModel> = resultOfdeleteTrans
-    fun clearDeleteTrans() {
-        resultOfdeleteTrans.value = null
+
+
+    var resultOfGetTransFilter: MutableLiveData<GetTransFilterOutputModel> = MutableLiveData()
+    fun getTransFilter(
+        type:String?,
+        members:String?,
+        date:String?,
+        category:String?,
+        activity:AllTransDisplayActivity,
+        token: String,
+        id:String
+    ) {
+        try {
+            if (Constants.checkForInternet(activity)) {
+                val func = Constants.getInstance().create(RetrofitApis::class.java)
+                viewModelScope.launch {
+                    val result = func.getTransFilter(token,id,type,members,date,category)
+                    Log.d("rk", result.toString())
+                    withContext(Dispatchers.Main) {
+                        if (result.isSuccessful) {
+                            resultOfGetTransFilter.value = result.body()
+                        } else {
+                            val errorBody = result.errorBody()?.string()
+                            val errorMessage = Constants.parseErrorMessage(errorBody)
+                            activity.errorFn(errorMessage ?: "Unknown error")
+
+                        }
+                    }
+                }
+            } else {
+                activity.errorFn("No internet connection")
+            }
+        } catch (err: Exception) {
+            Log.e("rk", "Exception occurred during sign up: ${err.message}")
+        }
     }
+    fun observerForGetTransFilter(): LiveData<GetTransFilterOutputModel> = resultOfGetTransFilter
 
 }

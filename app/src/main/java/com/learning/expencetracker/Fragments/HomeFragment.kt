@@ -215,9 +215,16 @@ class HomeFragment : Fragment() {
         ItemAdapter!!.setOnClickListener(object :
             BookNameDisplayAdapter.OnClickListener {
             override fun onClick(position: Int, model: BookNamesDisplayModel) {
+                var arr= ArrayList<String>()
+                for(i in 0..lis[position].userId!!.size-1)
+                {
+                    lis[position].userId?.get(i)?.let { arr.add(it) }
+                }
+                Log.d("rk",arr.toString())
                 var intent = Intent(requireActivity(),AllTransDisplayActivity::class.java)
                 intent.putExtra(Constants.BOOKID,lis[position]._id)
                 intent.putExtra(Constants.TOKEN,token)
+                intent.putExtra(Constants.MEMBERS,arr)
                 requireActivity().startActivity(intent)
             }
         })
@@ -347,8 +354,6 @@ class HomeFragment : Fragment() {
         }
         dialog!!.show()
     }
-
-
     fun dialogToEnterOneInput(title :String , hint :String , type:String , buttonText :String , lis : ArrayList<BookNamesDisplayModel>, position:Int) {
 
         try{

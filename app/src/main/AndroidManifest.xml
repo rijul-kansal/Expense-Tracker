@@ -16,11 +16,12 @@
         android:theme="@style/Theme.ExpenceTracker"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.FiltersActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.AllTransDisplayActivity"
-            android:theme="@style/AppThemeMainActivity"
-            android:exported="true" >
-
-        </activity>
+            android:exported="true"
+            android:theme="@style/AppThemeMainActivity"></activity>
         <activity
             android:name=".Activity.BaseActivity"
             android:exported="false" />
@@ -28,20 +29,15 @@
             android:name=".Activity.SignInActivity"
             android:exported="true"
             android:theme="@style/AppThemeForExitText">
-
         </activity>
         <activity
             android:name=".Activity.SignUpActivity"
             android:exported="true"
-            android:theme="@style/AppThemeForExitText">
-
-        </activity>
+            android:theme="@style/AppThemeForExitText"></activity>
         <activity
             android:name=".Activity.IntroActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".Activity.WalkThroughScreen"
             android:exported="true"
@@ -50,6 +46,7 @@
             android:name=".Activity.SplashActivity"
             android:exported="true"
             android:theme="@style/AppTheme">
+
         </activity>
         <activity
             android:name=".Activity.MainActivity"
@@ -57,6 +54,7 @@
             android:theme="@style/AppThemeMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
