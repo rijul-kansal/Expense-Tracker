@@ -1,11 +1,14 @@
 package com.learning.expencetracker.Activity
 
+
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -25,6 +28,7 @@ import com.learning.expencetracker.databinding.ActivityAllTransDisplayBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 
+
 class AllTransDisplayActivity : BaseActivity() {
     lateinit var binding:ActivityAllTransDisplayBinding
     lateinit var viewModel:MoneyTransViewModel
@@ -38,6 +42,8 @@ class AllTransDisplayActivity : BaseActivity() {
     var filterType:String?=null
     var filterStartDate : String?=null
     var filterEndDate : String?=null
+    var filterCat:String?=null
+    lateinit var lisCat:ArrayList<String>
     lateinit var lisMembers:ArrayList<String>
     var lis : ArrayList<TransDisplayModel> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +52,13 @@ class AllTransDisplayActivity : BaseActivity() {
         setContentView(binding.root)
 
         try{
+            setSupportActionBar(binding.toolbar)
+            binding.toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_ios_24);
+            getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
+            getSupportActionBar()?.setDisplayShowHomeEnabled(true)
+            supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_ios_24)
+            binding.toolbar.inflateMenu(R.menu.toolbar_menu);
+            lisCat=ArrayList()
             viewModel = ViewModelProvider(this)[MoneyTransViewModel::class.java]
             if(intent.hasExtra(Constants.BOOKID) && intent.hasExtra(Constants.TOKEN))
             {
@@ -216,6 +229,22 @@ class AllTransDisplayActivity : BaseActivity() {
             binding.membersFilterLL.setOnClickListener {
                 showMembersDialog(lisMembers)
             }
+            binding.categoryFilterLL.setOnClickListener {
+                try {
+                    var set = mutableSetOf<String>()
+                    for(i in 0..lis.size-1) lis[i].category?.let { it1 -> set.add(it1) }
+                    lisCat.clear()
+                    for(i in set) lisCat.add(i)
+                    Log.d("rk",lisCat.toString())
+
+                    showCatDialog(lisCat)
+                }catch (err:Exception)
+                {
+                    Log.d("rk",err.message.toString())
+                }
+
+            }
+
             binding.moneyInBtn.setOnClickListener {
                 transDialog(0,"add","","","",-1)
             }
@@ -235,18 +264,20 @@ class AllTransDisplayActivity : BaseActivity() {
                 Log.d("rk","finalDate : "+finalDate.toString())
 
 
-                if(finalDate!=null || finalType!=null || filterMembers!=null)
+                if(finalDate!=null || finalType!=null || filterMembers!=null || filterCat!=null)
                 {
                     showProgressBar(this)
-                    viewModel.getTransFilter(finalType,filterMembers,finalDate,null,this,"Bearer ${token}",bookId)
+                    viewModel.getTransFilter(finalType,filterMembers,finalDate,filterCat,this,"Bearer ${token}",bookId)
+                }
+                else
+                {
+                    toast(this,"Atleast select one filter option")
                 }
             }
         }catch (err:Exception)
         {
             Log.d("rk",err.message.toString())
         }
-
-
     }
 
     private fun showDateDialog() {
@@ -378,6 +409,54 @@ class AllTransDisplayActivity : BaseActivity() {
                 else
                 {
                     filterMembers+=",${liss[i]}"
+                }
+            }
+        }
+        builderMultiple.show()
+    }
+    private fun showCatDialog(liss :ArrayList<String>) {
+        filterCat=null
+        var set = mutableSetOf<Int>()
+        val builderMultiple = AlertDialog.Builder(this)
+        builderMultiple.setTitle("Select category")
+        val itemsArray = liss.toTypedArray()
+        val checkedItems = BooleanArray(liss.size) { false }
+        builderMultiple.setMultiChoiceItems(itemsArray, checkedItems) { dialog, which, isChecked ->
+            if(isChecked)
+            {
+                set.add(which)
+            }
+            else
+            {
+                set.remove(which)
+            }
+        }
+
+        builderMultiple.setNegativeButton(
+            "cancel"
+        ) {
+                dialog, which ->
+            dialog.dismiss()
+            binding.categoryFilterLL.setBackgroundResource(R.drawable.filter_bg)
+            filterType=null
+            adapter(lis)
+            binding.moneyInTV.text = moneyIn.toString()
+            binding.moneyOutTV.text = moneyOut.toString()
+            binding.totalBalanceTV.text=(moneyIn-moneyOut).toString()
+        }
+
+        builderMultiple.setPositiveButton("Select") {
+                dialog, which ->
+            binding.categoryFilterLL.setBackgroundResource(R.drawable.cash_dialog)
+            for(i in set)
+            {
+                if(filterCat==null)
+                {
+                    filterCat= liss[i]
+                }
+                else
+                {
+                    filterCat+=",${liss[i]}"
                 }
             }
         }
@@ -543,6 +622,40 @@ class AllTransDisplayActivity : BaseActivity() {
             {
                 filterEndDate=SimpleDateFormat("dd-MM-yyyy").parse(d).time.toString()
             }
+        }
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(com.learning.expencetracker.R.menu.toolbar_menu, menu)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.reset -> {
+                toast(this,"Reset Filters")
+                filterMembers=null
+                filterType=null
+                filterCat=null
+                filterStartDate=null
+                filterEndDate=null
+                binding.categoryFilterLL.setBackgroundResource(R.drawable.filter_bg)
+                binding.membersFilterLL.setBackgroundResource(R.drawable.filter_bg)
+                binding.typeFilterLL.setBackgroundResource(R.drawable.filter_bg)
+                binding.dateFilterLL.setBackgroundResource(R.drawable.filter_bg)
+                true
+            }
+
+            R.id.delete_all_trans -> {
+                toast(this,"hii")
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

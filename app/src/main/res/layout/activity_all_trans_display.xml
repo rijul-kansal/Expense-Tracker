@@ -22,6 +22,7 @@
             android:background="@color/blue"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
+            style="@style/ToolbarTheme"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp" />
     </com.google.android.material.appbar.AppBarLayout>
