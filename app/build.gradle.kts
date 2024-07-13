@@ -72,4 +72,9 @@ dependencies {
 
     // swpie to refresh
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    // graph
+    // Chart and graph library
+    implementation ("com.github.blackfizz:eazegraph:1.2.2@aar")
+    implementation ("com.nineoldandroids:library:2.4.0")
 }

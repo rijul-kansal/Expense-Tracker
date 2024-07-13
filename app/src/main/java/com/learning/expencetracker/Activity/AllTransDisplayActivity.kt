@@ -647,6 +647,10 @@ class AllTransDisplayActivity : BaseActivity() {
                 binding.membersFilterLL.setBackgroundResource(R.drawable.filter_bg)
                 binding.typeFilterLL.setBackgroundResource(R.drawable.filter_bg)
                 binding.dateFilterLL.setBackgroundResource(R.drawable.filter_bg)
+                adapter(lis)
+                binding.moneyInTV.text = moneyIn.toString()
+                binding.moneyOutTV.text = moneyOut.toString()
+                binding.totalBalanceTV.text=(moneyIn-moneyOut).toString()
                 true
             }
 

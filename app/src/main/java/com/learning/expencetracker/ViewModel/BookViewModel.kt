@@ -2,11 +2,13 @@ package com.learning.expencetracker.ViewModel
 
 import android.content.Context
 import android.util.Log
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.learning.expencetracker.Fragments.HomeFragment
+import com.learning.expencetracker.Fragments.StatisticsFragment
 import com.learning.expencetracker.Model.CreateNewBook.CreateNewBookInputModel
 import com.learning.expencetracker.Model.CreateNewBook.CreateNewBookOutputModel
 import com.learning.expencetracker.Model.DeleteBookModel.DeleteBookOutputModel
@@ -59,7 +61,7 @@ class BookViewModel : ViewModel() {
 
     // get book for particular user
     var resultOfGetBooks: MutableLiveData<GetBooksOutputModel> = MutableLiveData()
-    fun getBooks(context: Context, fragment: HomeFragment, token: String) {
+    fun getBooks(context: Context, fragment: Fragment, token: String) {
         try {
             if (Constants.checkForInternet(context)) {
                 val func = Constants.getInstance().create(RetrofitApis::class.java)
@@ -72,13 +74,31 @@ class BookViewModel : ViewModel() {
                         } else {
                             val errorBody = result.errorBody()?.string()
                             val errorMessage = Constants.parseErrorMessage(errorBody)
-                            fragment.errorFn(errorMessage ?: "Unknown error")
+                            when(fragment)
+                            {
+                                is HomeFragment ->{
+                                    fragment.errorFn(errorMessage ?: "Unknown error")
+                                }
+
+                                is StatisticsFragment->{
+                                    fragment.errorFn(errorMessage ?: "Unknown error")
+                                }
+                            }
 
                         }
                     }
                 }
             } else {
-                fragment.errorFn("No internet connection")
+                when(fragment)
+                {
+                    is HomeFragment ->{
+                        fragment.errorFn("No internet connection")
+                    }
+
+                    is StatisticsFragment->{
+                        fragment.errorFn("No internet connection")
+                    }
+                }
             }
         } catch (err: Exception) {
             Log.e("rk", "Exception occurred during sign up: ${err.message}")
