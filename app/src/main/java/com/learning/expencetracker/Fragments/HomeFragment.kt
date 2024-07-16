@@ -223,6 +223,7 @@ class HomeFragment : Fragment() {
                 Log.d("rk",arr.toString())
                 var intent = Intent(requireActivity(),AllTransDisplayActivity::class.java)
                 intent.putExtra(Constants.BOOKID,lis[position]._id)
+                intent.putExtra(Constants.BOOKNAME,lis[position].name)
                 intent.putExtra(Constants.TOKEN,token)
                 intent.putExtra(Constants.MEMBERS,arr)
                 requireActivity().startActivity(intent)

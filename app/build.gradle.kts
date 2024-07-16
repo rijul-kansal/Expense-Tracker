@@ -77,4 +77,10 @@ dependencies {
     // Chart and graph library
     implementation ("com.github.blackfizz:eazegraph:1.2.2@aar")
     implementation ("com.nineoldandroids:library:2.4.0")
+
+    // circular image view
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    // glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }

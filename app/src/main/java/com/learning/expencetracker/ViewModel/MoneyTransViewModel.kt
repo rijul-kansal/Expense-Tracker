@@ -1,6 +1,7 @@
 package com.learning.expencetracker.ViewModel
 
 import android.content.Context
+import android.os.Environment
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,6 +22,9 @@ import com.learning.expencetracker.Utils.RetrofitApis
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
+import java.io.File
+import java.io.FileOutputStream
 
 class MoneyTransViewModel : ViewModel() {
     // add new transaction
@@ -229,5 +233,69 @@ class MoneyTransViewModel : ViewModel() {
     fun clearGetDataForCat() {
         resultOfGetDataForCategory.value = null
     }
+
+    private val resultOfDownloadExcelSheet = MutableLiveData<ResponseBody>()
+
+    fun downloadExcelSheet(
+        activity: AllTransDisplayActivity,
+        token: String,
+        id: String,
+        bookName:String
+    ) {
+        if (Constants.checkForInternet(activity)) {
+            val func = Constants.getInstance().create(RetrofitApis::class.java)
+            viewModelScope.launch {
+                try {
+                    val result = func.downloadExcel(token, id)
+                    Log.d("rk", "Response received")
+                    withContext(Dispatchers.Main) {
+                        if (result.isSuccessful) {
+                            result.body()?.let {
+                                saveExcelFile(activity, it,bookName)
+                                resultOfDownloadExcelSheet.value = it
+                            } ?: run {
+                                activity.errorFn("Empty response body")
+                            }
+                        } else {
+                            val errorBody = result.errorBody()?.string()
+                            val errorMessage = Constants.parseErrorMessage(errorBody)
+                            activity.errorFn(errorMessage ?: "Unknown error")
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e("rk", "Exception occurred: ${e.message}")
+                    activity.errorFn("Exception occurred: ${e.message}")
+                }
+            }
+        } else {
+            activity.errorFn("No internet connection")
+        }
+    }
+
+    fun observerForDownloadExcelSheet(): LiveData<ResponseBody> = resultOfDownloadExcelSheet
+
+    private suspend fun saveExcelFile(activity: AllTransDisplayActivity, body: ResponseBody, bookName: String) {
+        withContext(Dispatchers.IO) {
+            try {
+                val fileName = "${bookName}.xlsx"
+                val externalStorageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                val file = File(externalStorageDir, fileName)
+
+                FileOutputStream(file).use { outputStream ->
+                    outputStream.write(body.bytes())
+                    Log.d("rk", "File downloaded successfully")
+                    withContext(Dispatchers.Main) {
+                        activity.toast(activity,"File downloaded successfully")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("rk", "Error saving file: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    activity.errorFn("Error saving file: ${e.message}")
+                }
+            }
+        }
+    }
+
 
 }

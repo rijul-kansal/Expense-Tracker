@@ -7,8 +7,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.learning.expencetracker.Activity.ProfileActivity
 import com.learning.expencetracker.Activity.SignInActivity
 import com.learning.expencetracker.Activity.SignUpActivity
+import com.learning.expencetracker.Model.ChangePasswordModel.ChangePasswordInputModel
+import com.learning.expencetracker.Model.ChangePasswordModel.ChangePasswordOutputModel
 import com.learning.expencetracker.Model.ForgottenPassword.ForgottenPasswordInputModel
 import com.learning.expencetracker.Model.ForgottenPassword.ForgottenPasswordOutputModel
 import com.learning.expencetracker.Model.LoginUser.LoginUserInputModel
@@ -235,4 +238,33 @@ class AuthenticationModel :ViewModel() {
         }
     }
     fun observerForResetPassword(): LiveData<ResetPasswordOutputModel> = resultOfResetPassword
+
+    // change password
+    var resultOfChangePassword: MutableLiveData<ChangePasswordOutputModel> = MutableLiveData()
+    fun changePassword(input: ChangePasswordInputModel, token: String, activity : ProfileActivity) {
+        try {
+            if (Constants.checkForInternet(activity)) {
+                val func = Constants.getInstance().create(RetrofitApis::class.java)
+                viewModelScope.launch {
+                    val result = func.changePassword(token,input)
+                    Log.d("rk",result.toString())
+                    withContext(Dispatchers.Main) {
+                        if (result.isSuccessful) {
+                            resultOfChangePassword.value = result.body()
+                        } else {
+                            val errorBody = result.errorBody()?.string()
+                            val errorMessage = Constants.parseErrorMessage(errorBody)
+                            activity.errorFn(errorMessage ?: "Unknown error")
+
+                        }
+                    }
+                }
+            } else {
+                activity.errorFn("No internet connection")
+            }
+        } catch (err: Exception) {
+            Log.e("rk", "Exception occurred during sign up: ${err.message}")
+        }
+    }
+    fun observerForChangePassword(): LiveData<ChangePasswordOutputModel> = resultOfChangePassword
 }

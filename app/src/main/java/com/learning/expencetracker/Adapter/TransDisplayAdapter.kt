@@ -28,7 +28,7 @@ class TransDisplayAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        Log.d("rk",item.time!!)
+//        Log.d("rk",item.time!!)
         holder.binding.amount.text = item.amount
         holder.binding.description.text = item.description
         holder.binding.category.text = item.category
@@ -39,7 +39,10 @@ class TransDisplayAdapter(
         {
             holder.binding.amount.setTextColor(Color.parseColor("#d00000"))
         }
-
+        else
+        {
+            holder.binding.amount.setTextColor(Color.parseColor("#38b000"))
+        }
         // Set click listeners for different views
         holder.itemView.setOnClickListener {
             onClickListener?.onClick(position, item)

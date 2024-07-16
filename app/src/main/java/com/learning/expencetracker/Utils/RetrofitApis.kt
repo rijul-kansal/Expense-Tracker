@@ -2,6 +2,8 @@ package com.learning.expencetracker.Utils
 
 import com.learning.expencetracker.Model.AddMoneyTrans.AddMoneyTransInputModel
 import com.learning.expencetracker.Model.AddMoneyTrans.AddMoneyTransOutputModel
+import com.learning.expencetracker.Model.ChangePasswordModel.ChangePasswordInputModel
+import com.learning.expencetracker.Model.ChangePasswordModel.ChangePasswordOutputModel
 import com.learning.expencetracker.Model.CreateNewBook.CreateNewBookInputModel
 import com.learning.expencetracker.Model.CreateNewBook.CreateNewBookOutputModel
 import com.learning.expencetracker.Model.DeleteBookModel.DeleteBookOutputModel
@@ -26,15 +28,20 @@ import com.learning.expencetracker.Model.UpdateSingleTrans.UpdateSingleTransInpu
 import com.learning.expencetracker.Model.UpdateSingleTrans.UpdateSingleTransOutputModel
 import com.learning.expencetracker.Model.VerifyOTP.VerifyOTPInputModel
 import com.learning.expencetracker.Model.VerifyOTP.VerifyOTPOutputModel
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Streaming
+import java.io.File
 
 
 interface RetrofitApis {
@@ -82,6 +89,22 @@ interface RetrofitApis {
         @Header("authorization") authHeader: String,
         @Path("id") id: String,
     ): Response<GetDataBasedOnCatOutputModel>
+    @PATCH("/api/api/v1/Users/updatePassword")
+    suspend fun changePassword(
+        @Header("authorization") authHeader: String,
+        @Body body : ChangePasswordInputModel
+    ): Response<ChangePasswordOutputModel>
 
+//    @Multipart
+//    @PATCH("/api/api/v1/users")
+//    suspend fun addProduct(
+//        @Part("name") name: String,
+//        @Part("mobileNumber") mobilenumber: String,
+//        @Part("fileName") fileName: File,
+//    ): Response<YourResponse>
+
+    @GET("/api/api/v1/moneyTrans/download/{id}")
+    @Streaming
+    suspend fun downloadExcel( @Header("authorization") authHeader: String,@Path("id") id: String): Response<ResponseBody>
 
 }

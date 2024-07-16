@@ -3,16 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/reset"
-        android:icon="@drawable/reset"
+        android:id="@+id/all"
+        android:icon="@drawable/baseline_more_vert_24_white"
         android:orderInCategory="100"
         app:showAsAction="always"
-        android:title="Reset" />
+        android:title="Option" />
 
-    <item
-        android:id="@+id/delete_all_trans"
-        android:icon="@drawable/baseline_delete_24_white"
-        android:orderInCategory="200"
-        app:showAsAction="always"
-        android:title="delete_all" />
 </menu>

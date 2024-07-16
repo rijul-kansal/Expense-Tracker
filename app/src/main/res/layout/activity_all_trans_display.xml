@@ -49,6 +49,7 @@
                 android:layout_height="30dp"
                 android:orientation="horizontal">
                 <TextView
+                    android:id="@+id/dateFilterTV"
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -62,6 +63,7 @@
                     android:src="@drawable/baseline_keyboard_arrow_down_24"/>
             </LinearLayout>
             <LinearLayout
+
                 android:layout_marginLeft="8dp"
                 android:id="@+id/typeFilterLL"
                 android:background="@drawable/filter_bg"
@@ -73,6 +75,7 @@
                 android:layout_height="30dp"
                 android:orientation="horizontal">
                 <TextView
+                    android:id="@+id/typeFilterTV"
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -97,6 +100,7 @@
                 android:layout_height="30dp"
                 android:orientation="horizontal">
                 <TextView
+                    android:id="@+id/memberFilterTV"
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -121,6 +125,7 @@
                 android:layout_height="30dp"
                 android:orientation="horizontal">
                 <TextView
+                    android:id="@+id/categoryFilterTV"
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

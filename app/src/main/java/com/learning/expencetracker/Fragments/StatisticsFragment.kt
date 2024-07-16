@@ -3,7 +3,6 @@ package com.learning.expencetracker.Fragments
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -11,14 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.learning.expencetracker.Activity.AllTransDisplayActivity
-import com.learning.expencetracker.Adapter.BookNameDisplayAdapter
 import com.learning.expencetracker.Adapter.GraphItemAdapter
 import com.learning.expencetracker.Model.BookNamesDisplayModel
 import com.learning.expencetracker.Model.GraphShownModel

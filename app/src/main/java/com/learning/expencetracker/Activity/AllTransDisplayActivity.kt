@@ -1,8 +1,10 @@
 package com.learning.expencetracker.Activity
 
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -12,7 +14,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,12 +34,21 @@ import java.util.Date
 
 
 class AllTransDisplayActivity : BaseActivity() {
+    var dialogFor3Dots:Dialog?=null
+    val requestPermessionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            viewModel.downloadExcelSheet(this, "Bearer ${token}", bookId,bookName)
+        } else {
+            checkPermission()
+        }
+    }
     lateinit var binding:ActivityAllTransDisplayBinding
     lateinit var viewModel:MoneyTransViewModel
     lateinit var ItemAdapter:TransDisplayAdapter
     lateinit var addTransDialog:Dialog
     var token:String =""
     var bookId : String =""
+    var bookName : String =""
     var moneyIn:Int=0
     var moneyOut:Int=0
     var filterMembers:String?=null
@@ -64,6 +77,7 @@ class AllTransDisplayActivity : BaseActivity() {
             {
                 token = intent.getStringExtra(Constants.TOKEN).toString()
                 bookId = intent.getStringExtra(Constants.BOOKID).toString()
+                bookName = intent.getStringExtra(Constants.BOOKNAME).toString()
                 lisMembers= intent.getStringArrayListExtra(Constants.MEMBERS)!!
                 intent.getStringExtra(Constants.BOOKID)?.let { Log.d("rk", it) }
                 intent.getStringArrayExtra(Constants.MEMBERS)?.let { Log.d("rk", it.toString()) }
@@ -205,7 +219,11 @@ class AllTransDisplayActivity : BaseActivity() {
 
                         }
 
-                        lis2.add(TransDisplayModel(result.data!!.data?.get(i)!!.amount.toString(),result.data!!.data!!.get(i).category,result.data!!.data!!.get(i).description,result.data!!.data!!.get(i).moneyType,result.data!!.data!!.get(i).addedAt.toString(),result.data!!.data!!.get(i).addedBy,result.data!!.data!!.get(i)._id))
+                        lis2.add(TransDisplayModel(result.data!!.data?.get(i)!!.amount.toString(),
+                            result.data!!.data!![i].category, result.data!!.data!![i].description,
+                            result.data!!.data!![i].moneyType,
+                            result.data!!.data!![i].addedAt.toString(), result.data!!.data!![i].addedBy,
+                            result.data!!.data!![i]._id))
                     }
                     Log.d("rk",lis2.toString())
                     binding.moneyInTV.text = moneyInn.toString()
@@ -219,18 +237,32 @@ class AllTransDisplayActivity : BaseActivity() {
 
             })
 
+            viewModel.observerForDownloadExcelSheet().observe(this, Observer {
+                    result->
+                try {
+                    cancelProgressBar()
+                   Log.d("rk",result.toString())
+                }catch (err:Exception)
+                {
+                    Log.d("rk",err.message.toString())
+                }
 
+            })
             binding.typeFilterLL.setOnClickListener {
+                binding.typeFilterLL.setBackgroundResource(R.drawable.filter_bg)
                 showTypeDialog()
             }
             binding.dateFilterLL.setOnClickListener {
+                binding.dateFilterLL.setBackgroundResource(R.drawable.filter_bg)
                 showDateDialog()
             }
             binding.membersFilterLL.setOnClickListener {
+                binding.membersFilterLL.setBackgroundResource(R.drawable.filter_bg)
                 showMembersDialog(lisMembers)
             }
             binding.categoryFilterLL.setOnClickListener {
                 try {
+                    binding.categoryFilterLL.setBackgroundResource(R.drawable.filter_bg)
                     var set = mutableSetOf<String>()
                     for(i in 0..lis.size-1) lis[i].category?.let { it1 -> set.add(it1) }
                     lisCat.clear()
@@ -281,6 +313,9 @@ class AllTransDisplayActivity : BaseActivity() {
     }
 
     private fun showDateDialog() {
+        var choosedOption =-1
+        val arr = arrayOf("Today","Yesterday","Single Date","Multiple Date")
+        binding.dateFilterTV.text = "Date"
         filterEndDate=null
         filterStartDate=null
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -288,11 +323,14 @@ class AllTransDisplayActivity : BaseActivity() {
             .setTitle("Choose one option")
             .setPositiveButton("Select") { dialog, which ->
                 dialog.dismiss()
+                if(choosedOption!=-1)
+                    binding.dateFilterTV.text = arr[choosedOption]
                 binding.dateFilterLL.setBackgroundResource(R.drawable.cash_dialog)
 
             }
             .setNegativeButton("Cancel") { dialog, which ->
                 dialog.dismiss()
+                binding.dateFilterTV.text = "Date"
                 binding.dateFilterLL.setBackgroundResource(R.drawable.filter_bg)
                 filterStartDate=null
                 filterEndDate=null
@@ -306,18 +344,22 @@ class AllTransDisplayActivity : BaseActivity() {
             ) { dialog, which ->
                 if(which == 0)
                 {
+                    choosedOption=0
                     filterStartDate=System.currentTimeMillis().toString()
                 }
                 if(which == 1)
                 {
+                    choosedOption=1
                     filterStartDate=(System.currentTimeMillis()-86400000).toString()
                 }
                 if(which == 2)
                 {
+                    choosedOption=2
                     showDatePicker()
                 }
                 if(which==3)
                 {
+                    choosedOption=3
                     showDatePicker()
                     showDatePicker()
                 }
@@ -327,17 +369,24 @@ class AllTransDisplayActivity : BaseActivity() {
         dialog.show()
     }
     private fun showTypeDialog() {
+
+        var choosedOption =-1
+        val arr = arrayOf("Both","In","Out")
+        binding.typeFilterTV.text = "Type"
         filterType=null
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder
             .setTitle("Choose one option")
             .setPositiveButton("Select") { dialog, which ->
                 dialog.dismiss()
+                if(choosedOption!=-1)
+                    binding.typeFilterTV.text = arr[choosedOption]
                 binding.typeFilterLL.setBackgroundResource(R.drawable.cash_dialog)
 
             }
             .setNegativeButton("Cancel") { dialog, which ->
                 dialog.dismiss()
+                binding.typeFilterTV.text = "Type"
                 binding.typeFilterLL.setBackgroundResource(R.drawable.filter_bg)
                 filterType=null
                 adapter(lis)
@@ -350,14 +399,17 @@ class AllTransDisplayActivity : BaseActivity() {
             ) { dialog, which ->
                 if(which == 0)
                 {
+                    choosedOption=0
                     filterType="In,Out"
                 }
                 if(which == 1)
                 {
+                    choosedOption=1
                     filterType="In"
                 }
                 if(which == 2)
                 {
+                    choosedOption=2
                     filterType="Out"
                 }
             }
@@ -366,6 +418,9 @@ class AllTransDisplayActivity : BaseActivity() {
         dialog.show()
     }
     private fun showMembersDialog(liss :ArrayList<String>) {
+        var choosedOption =-1
+
+        binding.memberFilterTV.text = "Type"
         filterMembers=null
         var set = mutableSetOf<Int>()
         val builderMultiple = AlertDialog.Builder(this)
@@ -389,6 +444,7 @@ class AllTransDisplayActivity : BaseActivity() {
         ) {
                 dialog, which ->
             dialog.dismiss()
+            binding.memberFilterTV.text = "Type"
             binding.membersFilterLL.setBackgroundResource(R.drawable.filter_bg)
             filterType=null
             adapter(lis)
@@ -399,6 +455,12 @@ class AllTransDisplayActivity : BaseActivity() {
 
         builderMultiple.setPositiveButton("Select") {
                 dialog, which ->
+            if(set.size==1)
+            binding.memberFilterTV.text = "Single Member"
+            else if(set.size >1)
+            {
+                binding.memberFilterTV.text = "Multiple members"
+            }
             binding.membersFilterLL.setBackgroundResource(R.drawable.cash_dialog)
             for(i in set)
             {
@@ -415,6 +477,7 @@ class AllTransDisplayActivity : BaseActivity() {
         builderMultiple.show()
     }
     private fun showCatDialog(liss :ArrayList<String>) {
+        binding.categoryFilterTV.text = "Category"
         filterCat=null
         var set = mutableSetOf<Int>()
         val builderMultiple = AlertDialog.Builder(this)
@@ -437,6 +500,7 @@ class AllTransDisplayActivity : BaseActivity() {
         ) {
                 dialog, which ->
             dialog.dismiss()
+            binding.categoryFilterTV.text = "Category"
             binding.categoryFilterLL.setBackgroundResource(R.drawable.filter_bg)
             filterType=null
             adapter(lis)
@@ -448,6 +512,12 @@ class AllTransDisplayActivity : BaseActivity() {
         builderMultiple.setPositiveButton("Select") {
                 dialog, which ->
             binding.categoryFilterLL.setBackgroundResource(R.drawable.cash_dialog)
+            if(set.size==1)
+                binding.categoryFilterTV.text = "Single Category"
+            else if(set.size >1)
+            {
+                binding.categoryFilterTV.text = "Multiple category"
+            }
             for(i in set)
             {
                 if(filterCat==null)
@@ -636,30 +706,64 @@ class AllTransDisplayActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
         return when (item.itemId) {
-            R.id.reset -> {
-                toast(this,"Reset Filters")
-                filterMembers=null
-                filterType=null
-                filterCat=null
-                filterStartDate=null
-                filterEndDate=null
-                binding.categoryFilterLL.setBackgroundResource(R.drawable.filter_bg)
-                binding.membersFilterLL.setBackgroundResource(R.drawable.filter_bg)
-                binding.typeFilterLL.setBackgroundResource(R.drawable.filter_bg)
-                binding.dateFilterLL.setBackgroundResource(R.drawable.filter_bg)
-                adapter(lis)
-                binding.moneyInTV.text = moneyIn.toString()
-                binding.moneyOutTV.text = moneyOut.toString()
-                binding.totalBalanceTV.text=(moneyIn-moneyOut).toString()
-                true
-            }
 
-            R.id.delete_all_trans -> {
-                toast(this,"hii")
-                true
+            R.id.all ->{
+                var t = findViewById<View>(R.id.all)
+                val location = IntArray(2)
+                t.getLocationOnScreen(location)
+                displayDialogFor3Dots(location)
+                return true
             }
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+    private fun checkPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermessionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        } else {
+            requestPermessionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+    }
+
+    fun displayDialogFor3Dots(location : IntArray)
+    {
+
+        dialogFor3Dots =Dialog(this)
+        val view: View = LayoutInflater.from(this).inflate(R.layout.menu_dialog_2, null)
+        dialogFor3Dots!!.setContentView(view)
+        val window = dialogFor3Dots!!.window
+        val wmlp = window!!.attributes
+        wmlp.x = (location[0]) //x position
+        wmlp.y = (location[1]-1000)
+
+        val resetLL = view.findViewById<LinearLayout>(R.id.resetLL)
+        val deleteBtn = view.findViewById<LinearLayout>(R.id.deleteLL1)
+        val downloadLL = view.findViewById<LinearLayout>(R.id.downlardLL)
+
+        resetLL.setOnClickListener {
+            toast(this,"Reset Filters")
+            filterMembers=null
+            filterType=null
+            filterCat=null
+            filterStartDate=null
+            filterEndDate=null
+            binding.categoryFilterLL.setBackgroundResource(R.drawable.filter_bg)
+            binding.membersFilterLL.setBackgroundResource(R.drawable.filter_bg)
+            binding.typeFilterLL.setBackgroundResource(R.drawable.filter_bg)
+            binding.dateFilterLL.setBackgroundResource(R.drawable.filter_bg)
+            adapter(lis)
+            binding.moneyInTV.text = moneyIn.toString()
+            binding.moneyOutTV.text = moneyOut.toString()
+            binding.totalBalanceTV.text=(moneyIn-moneyOut).toString()
+            dialogFor3Dots!!.dismiss()
+        }
+
+        downloadLL.setOnClickListener {
+            dialogFor3Dots!!.dismiss()
+            showProgressBar(this)
+            viewModel.downloadExcelSheet(this, "Baerer ${token}" , bookId, bookName)
+        }
+        dialogFor3Dots!!.show()
     }
 }
