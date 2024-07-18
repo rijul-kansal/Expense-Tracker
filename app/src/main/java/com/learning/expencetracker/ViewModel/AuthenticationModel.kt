@@ -22,6 +22,8 @@ import com.learning.expencetracker.Model.ResetPassword.ResetPasswordInputModel
 import com.learning.expencetracker.Model.ResetPassword.ResetPasswordOutputModel
 import com.learning.expencetracker.Model.SignUp.SignUpInputModel
 import com.learning.expencetracker.Model.SignUp.SignUpOutputModel
+import com.learning.expencetracker.Model.UpdateUser.UpdateUserInputModel
+import com.learning.expencetracker.Model.UpdateUser.UpdateUserOutputModel
 import com.learning.expencetracker.Model.VerifyOTP.VerifyOTPInputModel
 import com.learning.expencetracker.Model.VerifyOTP.VerifyOTPOutputModel
 import com.learning.expencetracker.Utils.Constants
@@ -30,7 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AuthenticationModel :ViewModel() {
+class AuthenticationModel : ViewModel() {
 
     // Sign up user
     var resultOfSignUpUser: MutableLiveData<SignUpOutputModel> = MutableLiveData()
@@ -267,4 +269,35 @@ class AuthenticationModel :ViewModel() {
         }
     }
     fun observerForChangePassword(): LiveData<ChangePasswordOutputModel> = resultOfChangePassword
+
+
+    var resultOfUser: MutableLiveData<UpdateUserOutputModel> = MutableLiveData()
+    fun updateUser(token: String, activity : SignInActivity, input:UpdateUserInputModel) {
+        try {
+            if (Constants.checkForInternet(activity)) {
+                val func = Constants.getInstance().create(RetrofitApis::class.java)
+                viewModelScope.launch {
+                    val result = func.updateMe(token,input)
+                    Log.d("rk",result.toString())
+                    withContext(Dispatchers.Main) {
+                        if (result.isSuccessful) {
+                            resultOfUser.value = result.body()
+                            Log.d("rk",result.body().toString())
+                        } else {
+                            val errorBody = result.errorBody()?.string()
+                            val errorMessage = Constants.parseErrorMessage(errorBody)
+                            Log.d("rk",errorMessage.toString())
+                            activity.errorFn(errorMessage ?: "Unknown error")
+
+                        }
+                    }
+                }
+            } else {
+                activity.errorFn("No internet connection")
+            }
+        } catch (err: Exception) {
+            Log.e("rk", "Exception occurred during sign up: ${err.message}")
+        }
+    }
+    fun observerForUser(): LiveData<UpdateUserOutputModel> = resultOfUser
 }

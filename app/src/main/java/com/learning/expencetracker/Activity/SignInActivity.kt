@@ -24,6 +24,7 @@ import com.learning.expencetracker.Model.VerifyOTP.VerifyOTPInputModel
 import com.learning.expencetracker.R
 import com.learning.expencetracker.Utils.Constants
 import com.learning.expencetracker.ViewModel.AuthenticationModel
+import com.learning.expencetracker.ViewModel.FireBaseViewModel
 import com.learning.expencetracker.databinding.ActivitySignInBinding
 
 class SignInActivity : BaseActivity() {
@@ -78,7 +79,7 @@ class SignInActivity : BaseActivity() {
                 editor.putString(Constants.TOKEN,result.token)
                 editor.apply()
 
-
+                result.token?.let { FireBaseViewModel().generateToken(it,this) }
                 toast(this,result.message.toString())
                 val i =Intent(this, MainActivity::class.java)
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

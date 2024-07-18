@@ -24,8 +24,10 @@ import com.learning.expencetracker.Model.SignUp.SignUpInputModel
 import com.learning.expencetracker.Model.SignUp.SignUpOutputModel
 import com.learning.expencetracker.Model.UpdateBookModel.UpdateBookInputModel
 import com.learning.expencetracker.Model.UpdateBookModel.UpdateBookOutputModel
+import com.learning.expencetracker.Model.UpdateUser.UpdateUserInputModel
 import com.learning.expencetracker.Model.UpdateSingleTrans.UpdateSingleTransInputModel
 import com.learning.expencetracker.Model.UpdateSingleTrans.UpdateSingleTransOutputModel
+import com.learning.expencetracker.Model.UpdateUser.UpdateUserOutputModel
 import com.learning.expencetracker.Model.VerifyOTP.VerifyOTPInputModel
 import com.learning.expencetracker.Model.VerifyOTP.VerifyOTPOutputModel
 import okhttp3.ResponseBody
@@ -34,14 +36,11 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
-import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Streaming
-import java.io.File
 
 
 interface RetrofitApis {
@@ -94,14 +93,11 @@ interface RetrofitApis {
         @Header("authorization") authHeader: String,
         @Body body : ChangePasswordInputModel
     ): Response<ChangePasswordOutputModel>
-
-//    @Multipart
-//    @PATCH("/api/api/v1/users")
-//    suspend fun addProduct(
-//        @Part("name") name: String,
-//        @Part("mobileNumber") mobilenumber: String,
-//        @Part("fileName") fileName: File,
-//    ): Response<YourResponse>
+    @PATCH("/api/api/v1/users")
+    suspend fun updateMe(
+        @Header("authorization") authHeader: String,
+        @Body body: UpdateUserInputModel?,
+    ): Response<UpdateUserOutputModel>
 
     @GET("/api/api/v1/moneyTrans/download/{id}")
     @Streaming

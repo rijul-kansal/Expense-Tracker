@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "1009915036951",
+    "project_id": "all-backend-fd5c7",
+    "storage_bucket": "all-backend-fd5c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009915036951:android:233e30b5331b9094276352",
+        "android_client_info": {
+          "package_name": "com.learning.cropcare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBInnJD2JfQOMd0itHY_fEXSTlUNqn0RRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009915036951:android:b2548b47e1e0b657276352",
+        "android_client_info": {
+          "package_name": "com.learning.expencetracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBInnJD2JfQOMd0itHY_fEXSTlUNqn0RRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009915036951:android:2184035357619942276352",
+        "android_client_info": {
+          "package_name": "com.learning.zomatoclone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBInnJD2JfQOMd0itHY_fEXSTlUNqn0RRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
