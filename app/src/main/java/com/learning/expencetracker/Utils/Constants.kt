@@ -19,6 +19,8 @@ object Constants {
     const val TOKEN = "token"
     const val BOOKID="bookId"
     const val MEMBERS="members"
+
+    const val PAYMENT_TYPE="paymentType"
     const val BOOKNAME = "bookname"
     val baseUrl = "https://us-central1-all-backend-fd5c7.cloudfunctions.net"
     val baseUrl1 = "https://expense-tracker-backend-2qzh.onrender.com"

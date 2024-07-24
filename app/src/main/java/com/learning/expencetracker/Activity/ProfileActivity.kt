@@ -1,14 +1,11 @@
 package com.learning.expencetracker.Activity
 
-import android.Manifest
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.READ_MEDIA_IMAGES
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -16,15 +13,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.learning.expencetracker.Model.ChangePasswordModel.ChangePasswordInputModel
 import com.learning.expencetracker.Utils.Constants
 import com.learning.expencetracker.ViewModel.AuthenticationModel
+import com.learning.expencetracker.ViewModel.FireBaseViewModel
 import com.learning.expencetracker.databinding.ActivityProfileBinding
+import java.io.IOException
 
 
 class ProfileActivity : BaseActivity() {
@@ -32,22 +28,10 @@ class ProfileActivity : BaseActivity() {
     lateinit var binding:ActivityProfileBinding
     lateinit var viewModel:AuthenticationModel
     lateinit var token:String
-    private val STORAGE_PERMISSION_CODE = 23
+    private var filePath: Uri? = null
 
-    companion object {
-        private const val CAMERA_PERMISSION_CODE = 100
-        private const val STORAGE_PERMISSION_CODE = 101
-    }
-
-    val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
-        val galleryUri = it
-        try{
-            binding.profileImage.setImageURI(galleryUri)
-        }catch(e:Exception){
-            e.printStackTrace()
-        }
-
-    }
+    // request code
+    private val PICK_IMAGE_REQUEST = 22
     override fun onCreate(savedInstanceState: Bundle?) {
         binding= ActivityProfileBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -61,7 +45,7 @@ class ProfileActivity : BaseActivity() {
             }
 
             binding.profileImage.setOnClickListener {
-                checkPermission()
+                SelectImage()
             }
             viewModel=ViewModelProvider(this)[AuthenticationModel::class.java]
             val sharedPreference =  getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
@@ -111,25 +95,52 @@ class ProfileActivity : BaseActivity() {
         }
         changePasswordDialog.show()
     }
-
     fun errorFn(message: String) {
         cancelProgressBar()
         toast(this, message)
     }
+    private fun SelectImage() {
 
-    private fun checkPermission(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermessionLauncher.launch(READ_MEDIA_IMAGES)
-        } else {
-            requestPermessionLauncher.launch(READ_EXTERNAL_STORAGE)
-        }
+        // Defining Implicit Intent to mobile gallery
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(
+            Intent.createChooser(
+                intent,
+                "Select Image from here..."
+            ),
+            PICK_IMAGE_REQUEST
+        )
     }
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        super.onActivityResult(
+            requestCode,
+            resultCode,
+            data
+        )
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
 
-    val requestPermessionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            galleryLauncher.launch("image/*")
-        } else {
-            checkPermission()
+            // Get the Uri of data
+            filePath = data.data
+            FireBaseViewModel().uploadImage(filePath!!,token,this)
+            try {
+
+                // Setting image on image view using Bitmap
+                val bitmap = MediaStore.Images.Media
+                    .getBitmap(
+                        contentResolver,
+                        filePath
+                    )
+                binding.profileImage.setImageBitmap(bitmap)
+            } catch (e: IOException) {
+                // Log the exception
+                e.printStackTrace()
+            }
         }
     }
 }

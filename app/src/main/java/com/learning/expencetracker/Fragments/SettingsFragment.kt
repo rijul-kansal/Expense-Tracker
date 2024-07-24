@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.learning.expencetracker.Activity.IntroActivity
+import com.learning.expencetracker.Activity.PaymentActivity
 import com.learning.expencetracker.Activity.ProfileActivity
 import com.learning.expencetracker.Utils.Constants
 import com.learning.expencetracker.databinding.FragmentSettingsBinding
@@ -34,6 +35,10 @@ class SettingsFragment : Fragment() {
         }
         binding.profileLL.setOnClickListener {
             startActivity(Intent(requireActivity(), ProfileActivity::class.java))
+        }
+
+        binding.paymentLL.setOnClickListener {
+            startActivity(Intent(requireActivity(), PaymentActivity::class.java))
         }
         return binding.root
     }

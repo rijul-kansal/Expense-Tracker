@@ -1,6 +1,7 @@
 package com.learning.expencetracker.Activity
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -68,13 +69,17 @@ class SignUpActivity : BaseActivity() {
             viewModel.observerForSignUpUser().observe(this, Observer { result ->
                 cancelProgressBar()
                 toast(this, result.message!!)
-                toast(this, "User successfully login")
+                toast(this, "User successfully register")
                 onCreateDialog()
             })
             viewModel.observerForVerifyOTPUser().observe(this, Observer { result ->
                 cancelProgressBar()
                 otpDialog.dismiss()
                 toast(this, result.message!!)
+                val sharedPreference =  getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+                var editor = sharedPreference.edit()
+                editor.putInt(Constants.PAYMENT_TYPE,0)
+                editor.apply()
                 var i =Intent(this, SignInActivity::class.java)
                 i.putExtra(Constants.EMAIL, email!!)
                 i.putExtra(Constants.PASSWORD, password!!)

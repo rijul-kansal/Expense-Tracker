@@ -14,6 +14,7 @@ import com.learning.expencetracker.Model.GetAllTrans.GetAllTransOutputModel
 import com.learning.expencetracker.Model.GetBooks.GetBooksOutputModel
 import com.learning.expencetracker.Model.GetDataBasedOnCategory.GetDataBasedOnCatOutputModel
 import com.learning.expencetracker.Model.GetTransFilters.GetTransFilterOutputModel
+import com.learning.expencetracker.Model.KeysModel.GetKeysOutputModel
 import com.learning.expencetracker.Model.LoginUser.LoginUserInputModel
 import com.learning.expencetracker.Model.LoginUser.LoginUserOutputModel
 import com.learning.expencetracker.Model.ResendVerificationOTP.ResendVerificationCodeInputModel
@@ -30,6 +31,8 @@ import com.learning.expencetracker.Model.UpdateSingleTrans.UpdateSingleTransOutp
 import com.learning.expencetracker.Model.UpdateUser.UpdateUserOutputModel
 import com.learning.expencetracker.Model.VerifyOTP.VerifyOTPInputModel
 import com.learning.expencetracker.Model.VerifyOTP.VerifyOTPOutputModel
+import com.learning.expencetracker.Model.VerifyTransAndAddToDB.VerifyTransAndAddToDBInputModel
+import com.learning.expencetracker.Model.VerifyTransAndAddToDB.VerifyTransIdAndAddToDBOutputModel
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -102,5 +105,10 @@ interface RetrofitApis {
     @GET("/api/api/v1/moneyTrans/download/{id}")
     @Streaming
     suspend fun downloadExcel( @Header("authorization") authHeader: String,@Path("id") id: String): Response<ResponseBody>
+    @GET("/api/api/v1/payment/getKeys/{amt}")
+    suspend fun getKeys( @Header("authorization") authHeader: String,@Path("amt") amt: String): Response<GetKeysOutputModel>
+
+    @POST("/api/api/v1/payment")
+    suspend fun verifyAndAddToDB( @Header("authorization") authHeader: String,@Body body: VerifyTransAndAddToDBInputModel): Response<VerifyTransIdAndAddToDBOutputModel>
 
 }

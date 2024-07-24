@@ -89,4 +89,9 @@ dependencies {
     // fcm
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-storage")
+
+
+    // pay U
+    implementation ("in.payu:payu-checkout-pro:2.3.3")
 }

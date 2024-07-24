@@ -4,11 +4,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -22,19 +20,26 @@
         android:roundIcon="@drawable/app_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.ExpenceTracker"
+        tools:replace="android:theme"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.PaymentHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.PaymentActivity"
+            android:exported="true"
+            android:theme="@style/AppThemeMainActivity"></activity>
+        <activity
             android:name=".Activity.ProfileActivity"
-            android:theme="@style/AppThemeMainActivity"
-            android:exported="true" >
-        </activity>
+            android:exported="true"
+            android:theme="@style/AppThemeMainActivity" />
         <activity
             android:name=".Activity.FiltersActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.AllTransDisplayActivity"
             android:exported="true"
-            android:theme="@style/AppThemeMainActivity"></activity>
+            android:theme="@style/AppThemeMainActivity" />
         <activity
             android:name=".Activity.BaseActivity"
             android:exported="false" />
@@ -47,11 +52,11 @@
         <activity
             android:name=".Activity.SignUpActivity"
             android:exported="true"
-            android:theme="@style/AppThemeForExitText"></activity>
+            android:theme="@style/AppThemeForExitText" />
         <activity
             android:name=".Activity.IntroActivity"
             android:exported="true"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".Activity.WalkThroughScreen"
             android:exported="true"
@@ -70,6 +75,7 @@
             android:name=".Activity.MainActivity"
             android:exported="true"
             android:theme="@style/AppThemeMainActivity">
+
         </activity>
     </application>
 

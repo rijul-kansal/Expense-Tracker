@@ -272,7 +272,7 @@ class AuthenticationModel : ViewModel() {
 
 
     var resultOfUser: MutableLiveData<UpdateUserOutputModel> = MutableLiveData()
-    fun updateUser(token: String, activity : SignInActivity, input:UpdateUserInputModel) {
+    fun updateUser(token: String, activity : Activity, input:UpdateUserInputModel) {
         try {
             if (Constants.checkForInternet(activity)) {
                 val func = Constants.getInstance().create(RetrofitApis::class.java)
@@ -287,13 +287,29 @@ class AuthenticationModel : ViewModel() {
                             val errorBody = result.errorBody()?.string()
                             val errorMessage = Constants.parseErrorMessage(errorBody)
                             Log.d("rk",errorMessage.toString())
-                            activity.errorFn(errorMessage ?: "Unknown error")
+                            when(activity)
+                            {
+                                is SignInActivity->{
+                                    activity.errorFn(errorMessage ?: "Unknown error")
+                                }
+                                is ProfileActivity ->{
+                                    activity.errorFn(errorMessage ?: "Unknown error")
+                                }
+                            }
 
                         }
                     }
                 }
             } else {
-                activity.errorFn("No internet connection")
+                when(activity)
+                {
+                    is SignInActivity->{
+                        activity.errorFn("No internet connection")
+                    }
+                    is ProfileActivity ->{
+                        activity.errorFn("No internet connection")
+                    }
+                }
             }
         } catch (err: Exception) {
             Log.e("rk", "Exception occurred during sign up: ${err.message}")

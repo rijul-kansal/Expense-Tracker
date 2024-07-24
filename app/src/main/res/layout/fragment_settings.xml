@@ -85,6 +85,32 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="216dp">
         <LinearLayout
+            android:id="@+id/paymentHistoryLL"
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:src="@drawable/payment_history"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="Payment History"
+                android:gravity="center"
+                android:textSize="24dp"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="286dp">
+        <LinearLayout
             android:id="@+id/logoutLL"
             android:padding="8dp"
             android:layout_width="match_parent"
