@@ -42,7 +42,7 @@ class PaymentActivity : BaseActivity() {
             val sharedPreference=  getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
             type = sharedPreference.getInt(Constants.PAYMENT_TYPE,0)
             token = sharedPreference.getString(Constants.TOKEN,"").toString()
-            Log.d("rk",type.toString()+token)
+
 
             if(type == getItem(0))
             {
@@ -150,7 +150,7 @@ class PaymentActivity : BaseActivity() {
 
         PayUCheckoutPro.open(this, payUPaymentParams, object : PayUCheckoutProListener {
                 override fun onPaymentSuccess(response: Any) {
-                    Log.d("rk",tnxId)
+
 
                     viewModel.verifyTransAndAddToDB("Bearer ${token}", this@PaymentActivity, VerifyTransAndAddToDBInputModel(transId))
 
@@ -162,8 +162,6 @@ class PaymentActivity : BaseActivity() {
                     if (payUResponse != null) {
                         val transSuccessModel: TransSuccessModel = Gson().fromJson(payUResponse, TransSuccessModel::class.java)
                         val res = Gson().toJson(transSuccessModel)
-                        Log.d("rk", payUResponse)
-                        Log.d("rk", res)
                     } else {
                         Log.d("rk", "payUResponse is null")
                     }
@@ -228,6 +226,7 @@ class PaymentActivity : BaseActivity() {
 
 
     fun errorFn(message: String) {
+
         cancelProgressBar()
         toast(this, message)
     }

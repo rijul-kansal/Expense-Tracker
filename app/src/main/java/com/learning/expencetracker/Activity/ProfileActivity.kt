@@ -15,7 +15,10 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.learning.expencetracker.Model.ChangePasswordModel.ChangePasswordInputModel
+import com.learning.expencetracker.Model.UpdateUser.UpdateUserInputModel
+import com.learning.expencetracker.R
 import com.learning.expencetracker.Utils.Constants
 import com.learning.expencetracker.ViewModel.AuthenticationModel
 import com.learning.expencetracker.ViewModel.FireBaseViewModel
@@ -29,9 +32,14 @@ class ProfileActivity : BaseActivity() {
     lateinit var viewModel:AuthenticationModel
     lateinit var token:String
     private var filePath: Uri? = null
-
+    var dialogDisplay:Dialog?=null
     // request code
     private val PICK_IMAGE_REQUEST = 22
+
+    var newMobileNumber:String=""
+    var oldMobileNumber:String=""
+    var oldName:String=""
+    var newName:String=""
     override fun onCreate(savedInstanceState: Bundle?) {
         binding= ActivityProfileBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -39,18 +47,46 @@ class ProfileActivity : BaseActivity() {
 
 
         try{
-
             binding.changePasswordCv.setOnClickListener {
                 changePasswordDialog()
             }
-
             binding.profileImage.setOnClickListener {
                 SelectImage()
             }
+
+
             viewModel=ViewModelProvider(this)[AuthenticationModel::class.java]
+
+
             val sharedPreference =  getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
             token = sharedPreference.getString(Constants.TOKEN,"defaultName").toString()
+            showProgressBar(this)
+            viewModel.getUser("Bearer ${token}" ,this)
 
+            viewModel.observerForGetUser().observe(this, Observer {
+                    result->
+                cancelProgressBar()
+                if(result!=null)
+                {
+                    oldName  = result.data!!.name.toString()
+                    val email  = result.data!!.email
+                    oldMobileNumber  = result.data!!.mobileNumber.toString()
+                    val image  = result.data!!.Image
+
+                    Glide
+                        .with(this)
+                        .load(image)
+                        .centerCrop()
+                        .placeholder(R.drawable.logo)
+                        .into(binding.profileImage)
+                    binding.emailTv.text=email
+                    binding.emailTv.visibility=View.VISIBLE
+                    binding.nameTv.visibility=View.VISIBLE
+                    binding.mobileNoTv.visibility=View.VISIBLE
+                    binding.nameTv.text=oldName
+                    binding.mobileNoTv.text=oldMobileNumber
+                }
+            })
             viewModel.observerForChangePassword().observe(this, Observer {
                 result->
                 cancelProgressBar()
@@ -69,6 +105,36 @@ class ProfileActivity : BaseActivity() {
                 }
             })
 
+            binding.nameTv.setOnClickListener {
+                showDialog("Please Rename your name",1)
+            }
+            binding.mobileNoTv.setOnClickListener {
+                showDialog("Please Reenter your mobile Number",2)
+            }
+
+            binding.updateTv.setOnClickListener {
+                var name:String?=null
+                var mobileNumber:String?=null
+                var flag=0
+                if(oldName!=newName && newName!="")
+                {
+                    flag=1
+                    name=newName
+                }
+                if(newMobileNumber!=oldMobileNumber && newMobileNumber!="")
+                {
+                    flag=1
+                    mobileNumber= newMobileNumber
+                }
+                if(flag==1)
+                    viewModel.updateUser("Bearer ${token}" ,this, UpdateUserInputModel(null,name,mobileNumber,null))
+            }
+
+            viewModel.observerForUser().observe(this, Observer {
+                res->
+                toast(this, "Changed Successfully")
+
+            })
         }catch (err:Exception)
         {
             Log.d("rk",err.message.toString())
@@ -113,11 +179,7 @@ class ProfileActivity : BaseActivity() {
             PICK_IMAGE_REQUEST
         )
     }
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(
             requestCode,
             resultCode,
@@ -142,5 +204,38 @@ class ProfileActivity : BaseActivity() {
                 e.printStackTrace()
             }
         }
+    }
+    fun showDialog(title:String, type:Int) {
+        dialogDisplay = Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
+        dialogDisplay=Dialog(this)
+        val view: View = LayoutInflater.from(this).inflate(R.layout.useremail_dialog, null)
+
+        val submitOtpButton = view.findViewById<TextView>(R.id.sendOtpBtn)
+        val titleTv= view.findViewById<TextView>(R.id.titleTv)
+        submitOtpButton.text = "Update"
+        titleTv.text=title
+
+        dialogDisplay!!.setContentView(view)
+        dialogDisplay!!.setCanceledOnTouchOutside(false)
+        val window = dialogDisplay!!.window
+        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        window?.setBackgroundDrawableResource(android.R.color.transparent)
+        window?.setGravity(Gravity.BOTTOM)
+
+        submitOtpButton.setOnClickListener {
+            if(type==1)
+            {
+                newName = view.findViewById<EditText>(R.id.emailET).text.toString()
+                binding.nameTv.text=newName
+                dialogDisplay!!.dismiss()
+            }
+            else
+            {
+                newMobileNumber = view.findViewById<EditText>(R.id.emailET).text.toString()
+                binding.mobileNoTv.text=newMobileNumber
+                dialogDisplay!!.dismiss()
+            }
+        }
+        dialogDisplay!!.show()
     }
 }

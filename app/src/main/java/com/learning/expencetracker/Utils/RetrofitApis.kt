@@ -13,10 +13,12 @@ import com.learning.expencetracker.Model.ForgottenPassword.ForgottenPasswordOutp
 import com.learning.expencetracker.Model.GetAllTrans.GetAllTransOutputModel
 import com.learning.expencetracker.Model.GetBooks.GetBooksOutputModel
 import com.learning.expencetracker.Model.GetDataBasedOnCategory.GetDataBasedOnCatOutputModel
+import com.learning.expencetracker.Model.GetMe.GetMeOutputModel
 import com.learning.expencetracker.Model.GetTransFilters.GetTransFilterOutputModel
 import com.learning.expencetracker.Model.KeysModel.GetKeysOutputModel
 import com.learning.expencetracker.Model.LoginUser.LoginUserInputModel
 import com.learning.expencetracker.Model.LoginUser.LoginUserOutputModel
+import com.learning.expencetracker.Model.PaymentHistory.PaymentHistoryOutputModel
 import com.learning.expencetracker.Model.ResendVerificationOTP.ResendVerificationCodeInputModel
 import com.learning.expencetracker.Model.ResendVerificationOTP.ResendVerificationOTPOutputModel
 import com.learning.expencetracker.Model.ResetPassword.ResetPasswordInputModel
@@ -75,33 +77,16 @@ interface RetrofitApis {
     suspend fun updateSingleTrans(@Header("authorization") authHeader:String,@Path("id") otp: String?,@Body body : UpdateSingleTransInputModel) : Response<UpdateSingleTransOutputModel>
     @DELETE("/api/api/v1/moneyTrans/{id}")
     suspend fun deleteSingleTrans(@Header("authorization") authHeader:String,@Path("id") otp: String?) : Response<DeleteTransOutputModel>
-
     @GET("/api/api/v1/moneyTrans/filter/{id}?")
-    suspend fun getTransFilter(
-        @Header("authorization") authHeader: String,
-        @Path("id") id: String,
-        @Query("type") type: String?,
-        @Query("members") members: String?,
-        @Query("date") date: String?,
-        @Query("category") category: String?
-    ): Response<GetTransFilterOutputModel>
-
+    suspend fun getTransFilter(@Header("authorization") authHeader: String, @Path("id") id: String, @Query("type") type: String?, @Query("members") members: String?, @Query("date") date: String?, @Query("category") category: String?): Response<GetTransFilterOutputModel>
     @GET("/api/api/v1/moneyTrans/basedOnCat/{id}?")
-    suspend fun getDataBasedOnCategory(
-        @Header("authorization") authHeader: String,
-        @Path("id") id: String,
-    ): Response<GetDataBasedOnCatOutputModel>
+    suspend fun getDataBasedOnCategory(@Header("authorization") authHeader: String, @Path("id") id: String, ): Response<GetDataBasedOnCatOutputModel>
     @PATCH("/api/api/v1/Users/updatePassword")
-    suspend fun changePassword(
-        @Header("authorization") authHeader: String,
-        @Body body : ChangePasswordInputModel
-    ): Response<ChangePasswordOutputModel>
+    suspend fun changePassword(@Header("authorization") authHeader: String, @Body body : ChangePasswordInputModel): Response<ChangePasswordOutputModel>
     @PATCH("/api/api/v1/users")
-    suspend fun updateMe(
-        @Header("authorization") authHeader: String,
-        @Body body: UpdateUserInputModel?,
-    ): Response<UpdateUserOutputModel>
-
+    suspend fun updateMe(@Header("authorization") authHeader: String, @Body body: UpdateUserInputModel?, ): Response<UpdateUserOutputModel>
+    @GET("/api/api/v1/users")
+    suspend fun getMe(@Header("authorization") authHeader: String, ): Response<GetMeOutputModel>
     @GET("/api/api/v1/moneyTrans/download/{id}")
     @Streaming
     suspend fun downloadExcel( @Header("authorization") authHeader: String,@Path("id") id: String): Response<ResponseBody>
@@ -110,5 +95,8 @@ interface RetrofitApis {
 
     @POST("/api/api/v1/payment")
     suspend fun verifyAndAddToDB( @Header("authorization") authHeader: String,@Body body: VerifyTransAndAddToDBInputModel): Response<VerifyTransIdAndAddToDBOutputModel>
+
+    @GET("/api/api/v1/payment")
+    suspend fun paymentHistory( @Header("authorization") authHeader: String): Response<PaymentHistoryOutputModel>
 
 }

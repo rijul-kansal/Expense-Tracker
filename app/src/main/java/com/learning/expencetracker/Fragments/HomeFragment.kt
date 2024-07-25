@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +28,7 @@ import com.learning.expencetracker.Model.UpdateBookModel.UpdateBookInputModel
 import com.learning.expencetracker.R
 import com.learning.expencetracker.Utils.Constants
 import com.learning.expencetracker.ViewModel.BookViewModel
+import com.learning.expencetracker.ViewModel.PaymentViewModel
 import com.learning.expencetracker.databinding.FragmentHomeBinding
 
 
@@ -40,6 +42,8 @@ class HomeFragment : Fragment() {
     var bookNameDialog :Dialog?=null
     var ItemAdapter : BookNameDisplayAdapter?=null
     var lis : ArrayList<BookNamesDisplayModel> = ArrayList()
+
+    lateinit var viewModel1: PaymentViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,7 +51,9 @@ class HomeFragment : Fragment() {
         binding =FragmentHomeBinding.inflate(inflater, container, false)
 
         try{
+            viewModel1 = ViewModelProvider(this)[PaymentViewModel::class.java]
             viewModel = ViewModelProvider(requireActivity())[BookViewModel::class.java]
+
             val sharedPreference =  requireActivity().getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
             token = sharedPreference.getString(Constants.TOKEN,"defaultName").toString()
             Log.d("rk",token)
@@ -73,6 +79,7 @@ class HomeFragment : Fragment() {
 
                     adapter(lis)
                     viewModel.clearGetBookForUser()
+                    viewModel1.paymentHistory("Bearer ${token}" ,requireActivity())
                 }
 
             })
@@ -113,7 +120,30 @@ class HomeFragment : Fragment() {
                 }
 
             })
-
+            viewModel1.observerForPaymentHistory().observe(viewLifecycleOwner , Observer {
+                    result->
+                Log.d("rk",result.toString())
+                val sharedPreference =  requireActivity().getSharedPreferences("PREFERENCE_NAME",
+                    AppCompatActivity.MODE_PRIVATE
+                )
+                var editor = sharedPreference.edit()
+                if(result.data!!.history!!.size>0)
+                {
+                    if(result.data!!.history!![0]?.amount == 600)
+                    {
+                        editor.putInt(Constants.PAYMENT_TYPE,1)
+                    }
+                    else
+                    {
+                        editor.putInt(Constants.PAYMENT_TYPE,0)
+                    }
+                }
+                else
+                {
+                    editor.putInt(Constants.PAYMENT_TYPE,0)
+                }
+                editor.apply()
+            })
             viewModel.observerForDeleteBooks().observe(viewLifecycleOwner , Observer {
                 result->
             try {
@@ -151,6 +181,7 @@ class HomeFragment : Fragment() {
         {
             lis.clear()
             adapter(lis)
+            viewModel1.paymentHistory("Bearer ${token}" ,requireActivity())
         }
         cancelProgressBar()
         toast(requireActivity(), message)
@@ -161,6 +192,7 @@ class HomeFragment : Fragment() {
     {
         dialog = Dialog(context)
         dialog!!.setContentView(R.layout.progress_bar)
+        dialog!!.setCancelable(false)
         dialog!!.show()
     }
 
@@ -220,7 +252,6 @@ class HomeFragment : Fragment() {
                 {
                     lis[position].userId?.get(i)?.let { arr.add(it) }
                 }
-                Log.d("rk",arr.toString())
                 var intent = Intent(requireActivity(),AllTransDisplayActivity::class.java)
                 intent.putExtra(Constants.BOOKID,lis[position]._id)
                 intent.putExtra(Constants.BOOKNAME,lis[position].name)
@@ -240,7 +271,6 @@ class HomeFragment : Fragment() {
         ItemAdapter!!.setOnClickListenerFor3Dots(
             object : BookNameDisplayAdapter.OnClickListenerFor3Dots{
                 override fun onClickFor3Dots(position: Int, location : IntArray) {
-                    Log.d("rk",location[0].toString())
                     displayDialogFor3Dots(location,position)
                 }
             }
@@ -307,7 +337,6 @@ class HomeFragment : Fragment() {
             for(i in set)
             {
                 arrlis.add(itemsArray[i])
-                Log.d("rk",arrlis.toString())
             }
             viewModel.updateBook(requireContext(),this,"Bearer ${token}",id,
                 UpdateBookInputModel(removeUser = arrlis)

@@ -17,6 +17,7 @@ open class BaseActivity : AppCompatActivity() {
     {
         dialog = Dialog(context)
         dialog!!.setContentView(R.layout.progress_bar)
+        dialog!!.setCancelable(false)
         dialog!!.show()
     }
 

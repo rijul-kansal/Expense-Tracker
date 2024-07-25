@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.learning.expencetracker.Activity.IntroActivity
 import com.learning.expencetracker.Activity.PaymentActivity
+import com.learning.expencetracker.Activity.PaymentHistoryActivity
 import com.learning.expencetracker.Activity.ProfileActivity
 import com.learning.expencetracker.Utils.Constants
 import com.learning.expencetracker.databinding.FragmentSettingsBinding
@@ -39,6 +40,10 @@ class SettingsFragment : Fragment() {
 
         binding.paymentLL.setOnClickListener {
             startActivity(Intent(requireActivity(), PaymentActivity::class.java))
+        }
+
+        binding.paymentHistoryLL.setOnClickListener {
+            startActivity(Intent(requireActivity(), PaymentHistoryActivity::class.java))
         }
         return binding.root
     }

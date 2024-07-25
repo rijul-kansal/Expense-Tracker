@@ -30,7 +30,7 @@ import java.util.Random
 
 class StatisticsFragment : Fragment() {
     var dialog: Dialog?=null
-     lateinit var binding: FragmentStatisticsBinding
+    lateinit var binding: FragmentStatisticsBinding
     lateinit var viewModel: MoneyTransViewModel
     lateinit var viewModel1: BookViewModel
     lateinit var token :String
@@ -47,87 +47,93 @@ class StatisticsFragment : Fragment() {
         try{
             val sharedPreference =  requireActivity().getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
             token = sharedPreference.getString(Constants.TOKEN,"defaultName").toString()
-            Log.d("rk",token)
-            showProgressBar(requireActivity())
-            viewModel1.getBooks(requireContext(),this,"Bearer ${token}")
+            val type = sharedPreference.getInt(Constants.PAYMENT_TYPE,0)
+            if(type !=0)
+            {
+                showProgressBar(requireActivity())
+                viewModel1.getBooks(requireContext(),this,"Bearer ${token}")
+                viewModel1.observerForGetBooks().observe(viewLifecycleOwner, Observer {
+                        result->
 
-            viewModel1.observerForGetBooks().observe(viewLifecycleOwner, Observer {
-                result->
-
-                if(result!=null)
-                {
-                   cancelProgressBar()
-                    lis.clear()
-                    var liss= ArrayList<String>()
-                    for( i in 0..result.data!!.data!!.size-1)
+                    if(result!=null)
                     {
-                        result.data!!.data?.get(i)?.name?.let { liss.add(it) }
-                        lis.add(BookNamesDisplayModel(result.data!!.data?.get(i)?.name,
-                            result.data!!.data?.get(i)!!._id,null,null))
-                    }
-                    viewModel1.clearGetBookForUser()
-                    displayMembersDialog(liss)
-                }
-            })
-
-            viewModel.observerForGetDataForCategory().observe(viewLifecycleOwner, Observer {
-                    result->
-                if(result!=null)
-                {
-                    cancelProgressBar()
-                    try {
-                        var lisAmountIn=ArrayList<GraphShownModel>()
-                        var lisAmountOut=ArrayList<GraphShownModel>()
-
-
-                        binding.piechart.clearChart()
-                        binding.piechart1.clearChart()
-
-
-                        for(i in 0..result.data!!.data!!.size-1)
+                        cancelProgressBar()
+                        lis.clear()
+                        var liss= ArrayList<String>()
+                        for( i in 0..result.data!!.data!!.size-1)
                         {
-                            val color = abs(getRandomHex()).toString(16)
-                            result.data!!.data?.get(i)?._id?.let {
-                                GraphShownModel("#${color}",
-                                    it,result.data!!.data?.get(i)!!.amountIn.toString())
-                            }?.let { lisAmountIn.add(it) }
-
-                            result.data!!.data?.get(i)?._id?.let {
-                                GraphShownModel("#${color}",
-                                    it,result.data!!.data?.get(i)!!.amountOut.toString())
-                            }?.let { lisAmountOut.add(it) }
-
-
-                            binding.piechart.addPieSlice( PieModel(
-                                "${result.data!!.data?.get(i)?._id}", (result.data!!.data?.get(i)!!.amountIn)!!.toFloat(),
-                                Color.parseColor("#${color}")
-                            ))
-                            binding.piechart1.addPieSlice( PieModel(
-                                "${result.data!!.data?.get(i)?._id}", (result.data!!.data?.get(i)!!.amountOut)!!.toFloat(),
-                                Color.parseColor("#${color}")
-                            ))
+                            result.data!!.data?.get(i)?.name?.let { liss.add(it) }
+                            lis.add(BookNamesDisplayModel(result.data!!.data?.get(i)?.name,
+                                result.data!!.data?.get(i)!!._id,null,null))
                         }
-                        binding.LL1.visibility=View.VISIBLE
-                        binding.LL2.visibility=View.VISIBLE
-                        binding.Tv1.visibility=View.VISIBLE
-                        binding.Tv2.visibility=View.VISIBLE
-
-                        binding.piechart.startAnimation()
-                        binding.piechart1.startAnimation()
-
-                        adapterForAmountIn(lisAmountIn)
-                        adapterForAmountOut(lisAmountOut)
-
-
-
-                        viewModel.clearGetDataForCat()
-                    }catch (err:Exception)
-                    {
-                        Log.d("rk",err.message.toString())
+                        viewModel1.clearGetBookForUser()
+                        displayMembersDialog(liss)
                     }
+                })
+                viewModel.observerForGetDataForCategory().observe(viewLifecycleOwner, Observer {
+                        result->
+                    if(result!=null)
+                    {
+                        cancelProgressBar()
+                        try {
+                            var lisAmountIn=ArrayList<GraphShownModel>()
+                            var lisAmountOut=ArrayList<GraphShownModel>()
 
-                }
-            })
+
+                            binding.piechart.clearChart()
+                            binding.piechart1.clearChart()
+
+
+                            for(i in 0..result.data!!.data!!.size-1)
+                            {
+                                val color = abs(getRandomHex()).toString(16)
+                                result.data!!.data?.get(i)?._id?.let {
+                                    GraphShownModel("#${color}",
+                                        it,result.data!!.data?.get(i)!!.amountIn.toString())
+                                }?.let { lisAmountIn.add(it) }
+
+                                result.data!!.data?.get(i)?._id?.let {
+                                    GraphShownModel("#${color}",
+                                        it,result.data!!.data?.get(i)!!.amountOut.toString())
+                                }?.let { lisAmountOut.add(it) }
+
+
+                                binding.piechart.addPieSlice( PieModel(
+                                    "${result.data!!.data?.get(i)?._id}", (result.data!!.data?.get(i)!!.amountIn)!!.toFloat(),
+                                    Color.parseColor("#${color}")
+                                ))
+                                binding.piechart1.addPieSlice( PieModel(
+                                    "${result.data!!.data?.get(i)?._id}", (result.data!!.data?.get(i)!!.amountOut)!!.toFloat(),
+                                    Color.parseColor("#${color}")
+                                ))
+                            }
+                            binding.LL1.visibility=View.VISIBLE
+                            binding.LL2.visibility=View.VISIBLE
+                            binding.Tv1.visibility=View.VISIBLE
+                            binding.Tv2.visibility=View.VISIBLE
+
+                            binding.piechart.startAnimation()
+                            binding.piechart1.startAnimation()
+
+                            adapterForAmountIn(lisAmountIn)
+                            adapterForAmountOut(lisAmountOut)
+
+
+
+                            viewModel.clearGetDataForCat()
+                        }catch (err:Exception)
+                        {
+                            Log.d("rk",err.message.toString())
+                        }
+
+                    }
+                })
+            }
+            else
+            {
+                binding.Tv3.visibility=View.VISIBLE
+            }
+
         }catch (err:Exception)
         {
             
@@ -140,6 +146,7 @@ class StatisticsFragment : Fragment() {
     {
         dialog = Dialog(context)
         dialog!!.setContentView(R.layout.progress_bar)
+        dialog!!.setCancelable(false)
         dialog!!.show()
     }
 

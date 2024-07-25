@@ -39,6 +39,18 @@
             android:layout_weight="1" />
     </LinearLayout>
     <TextView
+        android:visibility="gone"
+        android:id="@+id/Tv3"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Please Subscribe to Standard or Pro Plan"
+        android:textStyle="bold"
+        android:textSize="28sp"
+        android:textColor="@color/black"
+        android:gravity="center"/>
+    <TextView
         android:id="@+id/Tv2"
         android:visibility="gone"
         android:layout_width="match_parent"

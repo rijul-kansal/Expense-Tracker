@@ -3,17 +3,19 @@ package com.learning.expencetracker.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.learning.expencetracker.Fragments.HomeFragment
 import com.learning.expencetracker.Fragments.SettingsFragment
 import com.learning.expencetracker.Fragments.StatisticsFragment
 import com.learning.expencetracker.R
 import com.learning.expencetracker.Utils.Constants
+import com.learning.expencetracker.ViewModel.PaymentViewModel
 import com.learning.expencetracker.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     lateinit var bottomNav : BottomNavigationView
     lateinit var token : String
@@ -22,10 +24,8 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
         val sharedPreference =  getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
         token = sharedPreference.getString(Constants.TOKEN,"defaultName").toString()
-        Log.d("rk",token)
         loadFragment(HomeFragment())
         bottomNav = findViewById(R.id.bottomNav) as BottomNavigationView
         bottomNav.setOnItemSelectedListener {
@@ -48,11 +48,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+
+
     }
     private  fun loadFragment(fragment: Fragment){
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container,fragment)
         transaction.commit()
+    }
+
+    fun errorFn(message: String) {
+        toast(this, message)
     }
 
 }

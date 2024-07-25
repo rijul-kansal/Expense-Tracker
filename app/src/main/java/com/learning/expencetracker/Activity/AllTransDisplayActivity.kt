@@ -79,9 +79,7 @@ class AllTransDisplayActivity : BaseActivity() {
                 bookId = intent.getStringExtra(Constants.BOOKID).toString()
                 bookName = intent.getStringExtra(Constants.BOOKNAME).toString()
                 lisMembers= intent.getStringArrayListExtra(Constants.MEMBERS)!!
-                intent.getStringExtra(Constants.BOOKID)?.let { Log.d("rk", it) }
-                intent.getStringArrayExtra(Constants.MEMBERS)?.let { Log.d("rk", it.toString()) }
-                intent.getStringExtra(Constants.TOKEN)?.let { Log.d("rk", it) }
+
 
             }
             showProgressBar(this)
@@ -92,7 +90,6 @@ class AllTransDisplayActivity : BaseActivity() {
                 try {
                     if(result !=null && result.data!=null)
                     {
-//                        addTransDialog.dismiss()
                         cancelProgressBar()
                         lis.clear()
                         moneyIn=0
@@ -225,7 +222,6 @@ class AllTransDisplayActivity : BaseActivity() {
                             result.data!!.data!![i].addedAt.toString(), result.data!!.data!![i].addedBy,
                             result.data!!.data!![i]._id))
                     }
-                    Log.d("rk",lis2.toString())
                     binding.moneyInTV.text = moneyInn.toString()
                     binding.moneyOutTV.text = moneyOutt.toString()
                     binding.totalBalanceTV.text=(moneyInn-moneyOutt).toString()
@@ -241,7 +237,6 @@ class AllTransDisplayActivity : BaseActivity() {
                     result->
                 try {
                     cancelProgressBar()
-                   Log.d("rk",result.toString())
                 }catch (err:Exception)
                 {
                     Log.d("rk",err.message.toString())
@@ -267,7 +262,6 @@ class AllTransDisplayActivity : BaseActivity() {
                     for(i in 0..lis.size-1) lis[i].category?.let { it1 -> set.add(it1) }
                     lisCat.clear()
                     for(i in set) lisCat.add(i)
-                    Log.d("rk",lisCat.toString())
 
                     showCatDialog(lisCat)
                 }catch (err:Exception)
@@ -287,13 +281,14 @@ class AllTransDisplayActivity : BaseActivity() {
             binding.searchFilter.setOnClickListener {
                 var finalDate: String?=null
                 var finalType= filterType
-                Log.d("rk",filterMembers.toString())
                 if(filterStartDate!=null)
                 {
                     finalDate = filterStartDate
                     if(filterEndDate!=null) finalDate+=",${filterEndDate}"
                 }
-                Log.d("rk","finalDate : "+finalDate.toString())
+
+
+
 
 
                 if(finalDate!=null || finalType!=null || filterMembers!=null || filterCat!=null)
@@ -682,7 +677,6 @@ class AllTransDisplayActivity : BaseActivity() {
             // formatting date in dd-mm-yyyy format.
             val dateFormatter = SimpleDateFormat("dd-MM-yyyy")
             d = dateFormatter.format(Date(it))
-            Log.d("rk","in b/w"+d.toString())
             if(filterStartDate==null)
             {
                 filterStartDate= SimpleDateFormat("dd-MM-yyyy").parse(d).time.toString()

@@ -14,6 +14,7 @@ import com.learning.expencetracker.Model.ChangePasswordModel.ChangePasswordInput
 import com.learning.expencetracker.Model.ChangePasswordModel.ChangePasswordOutputModel
 import com.learning.expencetracker.Model.ForgottenPassword.ForgottenPasswordInputModel
 import com.learning.expencetracker.Model.ForgottenPassword.ForgottenPasswordOutputModel
+import com.learning.expencetracker.Model.GetMe.GetMeOutputModel
 import com.learning.expencetracker.Model.LoginUser.LoginUserInputModel
 import com.learning.expencetracker.Model.LoginUser.LoginUserOutputModel
 import com.learning.expencetracker.Model.ResendVerificationOTP.ResendVerificationCodeInputModel
@@ -316,4 +317,45 @@ class AuthenticationModel : ViewModel() {
         }
     }
     fun observerForUser(): LiveData<UpdateUserOutputModel> = resultOfUser
+
+    var resultOfGetUser: MutableLiveData<GetMeOutputModel> = MutableLiveData()
+    fun getUser(token: String, activity : Activity) {
+        try {
+            if (Constants.checkForInternet(activity)) {
+                val func = Constants.getInstance().create(RetrofitApis::class.java)
+                viewModelScope.launch {
+                    val result = func.getMe(token)
+                    Log.d("rk",result.toString())
+                    withContext(Dispatchers.Main) {
+                        if (result.isSuccessful) {
+                            resultOfGetUser.value = result.body()
+                            Log.d("rk",result.body().toString())
+                        } else {
+                            val errorBody = result.errorBody()?.string()
+                            val errorMessage = Constants.parseErrorMessage(errorBody)
+                            Log.d("rk",errorMessage.toString())
+                            when(activity)
+                            {
+                                is ProfileActivity->{
+                                    activity.errorFn(errorMessage ?: "Unknown error")
+                                }
+
+                            }
+
+                        }
+                    }
+                }
+            } else {
+                when(activity)
+                {
+                    is ProfileActivity->{
+                        activity.errorFn("No internet connection")
+                    }
+                }
+            }
+        } catch (err: Exception) {
+            Log.e("rk", "Exception occurred during sign up: ${err.message}")
+        }
+    }
+    fun observerForGetUser(): LiveData<GetMeOutputModel> = resultOfGetUser
 }
