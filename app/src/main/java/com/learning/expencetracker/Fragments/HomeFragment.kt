@@ -122,20 +122,19 @@ class HomeFragment : Fragment() {
             })
             viewModel1.observerForPaymentHistory().observe(viewLifecycleOwner , Observer {
                     result->
-                Log.d("rk",result.toString())
                 val sharedPreference =  requireActivity().getSharedPreferences("PREFERENCE_NAME",
                     AppCompatActivity.MODE_PRIVATE
                 )
                 var editor = sharedPreference.edit()
                 if(result.data!!.history!!.size>0)
                 {
-                    if(result.data!!.history!![0]?.amount == 600)
+                    if(result.data!!.history!![0]!!.amount == 600)
                     {
                         editor.putInt(Constants.PAYMENT_TYPE,1)
                     }
                     else
                     {
-                        editor.putInt(Constants.PAYMENT_TYPE,0)
+                        editor.putInt(Constants.PAYMENT_TYPE,2)
                     }
                 }
                 else

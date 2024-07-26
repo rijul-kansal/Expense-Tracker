@@ -9,9 +9,7 @@ import android.webkit.WebView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
-import com.google.gson.Gson
 import com.learning.expencetracker.Adapter.ViewPagerAdapter2
-import com.learning.expencetracker.Model.VerifyTransAndAddToDB.TransSuccessModel
 import com.learning.expencetracker.Model.VerifyTransAndAddToDB.VerifyTransAndAddToDBInputModel
 import com.learning.expencetracker.R
 import com.learning.expencetracker.Utils.Constants
@@ -86,6 +84,7 @@ class PaymentActivity : BaseActivity() {
                 result->
                 val sharedPreference =  getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
                 var editor = sharedPreference.edit()
+                Log.d("rk",amt)
                 if(amt == "600")
                 {
                     editor.putInt(Constants.PAYMENT_TYPE,1)
@@ -150,8 +149,6 @@ class PaymentActivity : BaseActivity() {
 
         PayUCheckoutPro.open(this, payUPaymentParams, object : PayUCheckoutProListener {
                 override fun onPaymentSuccess(response: Any) {
-
-
                     viewModel.verifyTransAndAddToDB("Bearer ${token}", this@PaymentActivity, VerifyTransAndAddToDBInputModel(transId))
 
                 }
@@ -159,12 +156,7 @@ class PaymentActivity : BaseActivity() {
                 override fun onPaymentFailure(response: Any) {
                     response as HashMap<*, *>
                     val payUResponse = response[PayUCheckoutProConstants.CP_PAYU_RESPONSE]?.toString()
-                    if (payUResponse != null) {
-                        val transSuccessModel: TransSuccessModel = Gson().fromJson(payUResponse, TransSuccessModel::class.java)
-                        val res = Gson().toJson(transSuccessModel)
-                    } else {
-                        Log.d("rk", "payUResponse is null")
-                    }
+                    Log.d("rk",payUResponse.toString())
 
                 }
 
