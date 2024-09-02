@@ -20,6 +20,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.learning.expencetracker.Activity.AllTransDisplayActivity
 import com.learning.expencetracker.Adapter.BookNameDisplayAdapter
 import com.learning.expencetracker.Model.BookNamesDisplayModel
@@ -34,7 +36,6 @@ import com.learning.expencetracker.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
     var dialog: Dialog?=null
-    var positionForDots:Int =-1
     var dialogToEnterOneInput: Dialog?=null
     lateinit var binding:FragmentHomeBinding
     lateinit var token :String
@@ -51,23 +52,34 @@ class HomeFragment : Fragment() {
         binding =FragmentHomeBinding.inflate(inflater, container, false)
 
         try{
+            lis.clear()
+            Log.d("rk","On create called")
             viewModel1 = ViewModelProvider(this)[PaymentViewModel::class.java]
             viewModel = ViewModelProvider(requireActivity())[BookViewModel::class.java]
 
             val sharedPreference =  requireActivity().getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+            var editor = sharedPreference.edit()
             token = sharedPreference.getString(Constants.TOKEN,"defaultName").toString()
-            Log.d("rk",token)
 
-            if(lis.size == 0)
+            var sfLis = sharedPreference.getString(Constants.BOOKS_DATA,null)
+            if(sfLis == null)
             {
                 showProgressBar(requireActivity())
                 viewModel.getBooks(requireContext(),this, "Bearer ${token}")
+            }
+            else
+            {
+                val gson = Gson()
+                val listType = object : TypeToken<ArrayList<BookNamesDisplayModel>>() {}.type
+                val userList: ArrayList<BookNamesDisplayModel> = gson.fromJson(sfLis, listType)
+                adapter(userList)
             }
 
             viewModel.observerForGetBooks().observe(viewLifecycleOwner , Observer {
                     result->
                 if(result!=null)
                 {
+                    Log.d("rk",result.toString())
                     binding.refreshLayout.isRefreshing = false
                     cancelProgressBar()
                     lis.clear()
@@ -76,7 +88,10 @@ class HomeFragment : Fragment() {
                         var m = BookNamesDisplayModel(result.data!!.data?.get(i)?.name,result.data!!.data?.get(i)?._id ,result.data!!.data?.get(i)?.updatedLast,result.data!!.data?.get(i)?.userId)
                         lis.add(m)
                     }
-
+                    val jsonstr= Gson().toJson(lis)
+                    Log.d("rk","jsonStr" + jsonstr)
+                    editor.putString(Constants.BOOKS_DATA,jsonstr.toString())
+                    editor.commit()
                     adapter(lis)
                     viewModel.clearGetBookForUser()
                     viewModel1.paymentHistory("Bearer ${token}" ,requireActivity())
@@ -443,5 +458,44 @@ class HomeFragment : Fragment() {
         ItemAdapter=null
 
         Log.d("rk", "Fragment is being destroyed")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("rk","On Resume called")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("rk","On Start called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("rk","On pause called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("rk","On stop called")
+    }
+    fun preprocessString(input: String): String {
+        return input
+            .replace("BookNamesDisplayModel(", "{")
+            .replace(")", "}")
+            .replace("=", "\": \"")
+            .replace(", ", "\", \"")
+            .replace("userId\": \"[", "userId\": [\"")
+            .replace("]\"", "]")
+            .replace("\"{", "{")
+            .replace("}\"", "}")
+            .replace("\"[", "[")
+            .replace("]\"", "]")
+            .replace(", \" ", ", \"")
+            .replace("{ ", "{")
+            .replace("( ", "(")
+            .replace(" )", ")")
+            .replace("\", updatedLast", "\", \"updatedLast")
+            .replace("\", _id", "\", \"_id")
     }
 }

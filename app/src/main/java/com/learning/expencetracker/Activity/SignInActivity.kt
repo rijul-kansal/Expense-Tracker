@@ -25,7 +25,6 @@ import com.learning.expencetracker.R
 import com.learning.expencetracker.Utils.Constants
 import com.learning.expencetracker.ViewModel.AuthenticationModel
 import com.learning.expencetracker.ViewModel.FireBaseViewModel
-import com.learning.expencetracker.ViewModel.PaymentViewModel
 import com.learning.expencetracker.databinding.ActivitySignInBinding
 
 class SignInActivity : BaseActivity() {
