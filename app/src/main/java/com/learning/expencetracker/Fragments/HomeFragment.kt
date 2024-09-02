@@ -72,6 +72,7 @@ class HomeFragment : Fragment() {
                 val gson = Gson()
                 val listType = object : TypeToken<ArrayList<BookNamesDisplayModel>>() {}.type
                 val userList: ArrayList<BookNamesDisplayModel> = gson.fromJson(sfLis, listType)
+                lis=userList
                 adapter(userList)
             }
 
@@ -399,7 +400,6 @@ class HomeFragment : Fragment() {
         dialog!!.show()
     }
     fun dialogToEnterOneInput(title :String , hint :String , type:String , buttonText :String , lis : ArrayList<BookNamesDisplayModel>, position:Int) {
-
         try{
             dialogToEnterOneInput = Dialog(requireActivity(), android.R.style.Theme_Translucent_NoTitleBar)
             dialogToEnterOneInput=Dialog(requireActivity())
@@ -478,24 +478,5 @@ class HomeFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         Log.d("rk","On stop called")
-    }
-    fun preprocessString(input: String): String {
-        return input
-            .replace("BookNamesDisplayModel(", "{")
-            .replace(")", "}")
-            .replace("=", "\": \"")
-            .replace(", ", "\", \"")
-            .replace("userId\": \"[", "userId\": [\"")
-            .replace("]\"", "]")
-            .replace("\"{", "{")
-            .replace("}\"", "}")
-            .replace("\"[", "[")
-            .replace("]\"", "]")
-            .replace(", \" ", ", \"")
-            .replace("{ ", "{")
-            .replace("( ", "(")
-            .replace(" )", ")")
-            .replace("\", updatedLast", "\", \"updatedLast")
-            .replace("\", _id", "\", \"_id")
     }
 }
