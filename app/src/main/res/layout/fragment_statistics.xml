@@ -18,15 +18,21 @@
         android:textSize="28sp"
         android:textColor="@color/black"
         android:gravity="center"/>
-    <org.eazegraph.lib.charts.PieChart
-        android:visibility="gone"
-        android:id="@+id/piechart1"
-        android:layout_width="wrap_content"
-        android:layout_height="350dp" />
-    <androidx.recyclerview.widget.RecyclerView
+    <TextView
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="360dp"
+        android:layout_marginRight="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cumulative Based on Category"
+        android:textStyle="bold"
+        android:textSize="28sp"
+        android:textColor="@color/black"
+        android:gravity="center"/>
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleViewAmountOut"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_marginTop="64dp"
+        android:layout_gravity="center"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="32dp"/>
 </FrameLayout>

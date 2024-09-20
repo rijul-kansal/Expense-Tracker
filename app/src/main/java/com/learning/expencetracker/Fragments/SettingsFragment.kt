@@ -30,6 +30,7 @@ class SettingsFragment : Fragment() {
             val sharedPreference =  requireActivity().getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
             var editor = sharedPreference.edit()
             editor.remove(Constants.TOKEN)
+            editor.remove(Constants.BOOKS_DATA)
             editor.commit()
             startActivity(Intent(requireActivity(), IntroActivity::class.java))
             requireActivity().finish()

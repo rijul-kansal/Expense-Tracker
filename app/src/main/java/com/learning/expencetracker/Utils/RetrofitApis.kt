@@ -49,54 +49,114 @@ import retrofit2.http.Streaming
 
 
 interface RetrofitApis {
-    @POST("/api/api/v1/Users/signUp")
+//    @POST("/api/api/v1/Users/signUp")
+//    suspend fun signUp(@Body body : SignUpInputModel) : Response<SignUpOutputModel>
+//    @POST("/api/api/v1/Users/verifyEmail")
+//    suspend fun verifyOTP(@Body body : VerifyOTPInputModel) : Response<VerifyOTPOutputModel>
+//    @PATCH("/api/api/v1/Users/resendVerificationcode")
+//    suspend fun resendVerificationCode(@Body body : ResendVerificationCodeInputModel) : Response<ResendVerificationOTPOutputModel>
+//    @POST("/api/api/v1/Users/login")
+//    suspend fun loginUser(@Body body : LoginUserInputModel) : Response<LoginUserOutputModel>
+//    @POST("/api/api/v1/Users/forgottenPassword")
+//    suspend fun forgottenPassword(@Body body : ForgottenPasswordInputModel) : Response<ForgottenPasswordOutputModel>
+//    @PATCH("/api/api/v1/Users/resetPassword")
+//    suspend fun resetPassword(@Body body : ResetPasswordInputModel) : Response<ResetPasswordOutputModel>
+//    @POST("/api/api/v1/bookname")
+//    suspend fun createNewBook(@Body body : CreateNewBookInputModel, @Header("authorization") authHeader:String) : Response<CreateNewBookOutputModel>
+//    @GET("/api/api/v1/bookname")
+//    suspend fun getBooks(@Header("authorization") authHeader:String) : Response<GetBooksOutputModel>
+//    @PATCH("/api/api/v1/bookname/{id}")
+//    suspend fun updateBook(@Header("authorization") authHeader:String,@Path("id") otp: String?, @Body body : UpdateBookInputModel) : Response<UpdateBookOutputModel>
+//    @DELETE("/api/api/v1/bookname/{id}")
+//    suspend fun deleteBook(@Header("authorization") authHeader:String,@Path("id") otp: String?) : Response<DeleteBookOutputModel>
+//    @POST("/api/api/v1/moneyTrans/{id}")
+//    suspend fun addMoneyTrans(@Header("authorization") authHeader:String,@Path("id") otp: String?,@Body body : AddMoneyTransInputModel) : Response<AddMoneyTransOutputModel>
+//    @GET("/api/api/v1/moneyTrans/{id}")
+//    suspend fun getAllTrans(@Header("authorization") authHeader:String,@Path("id") otp: String?) : Response<GetAllTransOutputModel>
+//    @PATCH("/api/api/v1/moneyTrans/{id}")
+//    suspend fun updateSingleTrans(@Header("authorization") authHeader:String,@Path("id") otp: String?,@Body body : UpdateSingleTransInputModel) : Response<UpdateSingleTransOutputModel>
+//    @DELETE("/api/api/v1/moneyTrans/{id}")
+//    suspend fun deleteSingleTrans(@Header("authorization") authHeader:String,@Path("id") otp: String?) : Response<DeleteTransOutputModel>
+//    @GET("/api/api/v1/moneyTrans/filter/{id}?")
+//    suspend fun getTransFilter(@Header("authorization") authHeader: String, @Path("id") id: String, @Query("type") type: String?, @Query("members") members: String?, @Query("date") date: String?, @Query("category") category: String?): Response<GetTransFilterOutputModel>
+//    @GET("/api/api/v1/moneyTrans/basedOnCat/{id}?")
+//    suspend fun getDataBasedOnCategory(@Header("authorization") authHeader: String, @Path("id") id: String, ): Response<GetDataBasedOnCatOutputModel>
+//    @PATCH("/api/api/v1/Users/updatePassword")
+//    suspend fun changePassword(@Header("authorization") authHeader: String, @Body body : ChangePasswordInputModel): Response<ChangePasswordOutputModel>
+//    @PATCH("/api/api/v1/users")
+//    suspend fun updateMe(@Header("authorization") authHeader: String, @Body body: UpdateUserInputModel?, ): Response<UpdateUserOutputModel>
+//    @GET("/api/api/v1/users")
+//    suspend fun getMe(@Header("authorization") authHeader: String, ): Response<GetMeOutputModel>
+//    @GET("/api/api/v1/moneyTrans/download/{id}")
+//    @Streaming
+//    suspend fun downloadExcel( @Header("authorization") authHeader: String,@Path("id") id: String): Response<ResponseBody>
+//    @GET("/api/api/v1/payment/getKeys/{amt}")
+//    suspend fun getKeys( @Header("authorization") authHeader: String,@Path("amt") amt: String): Response<GetKeysOutputModel>
+//
+//    @POST("/api/api/v1/payment")
+//    suspend fun verifyAndAddToDB( @Header("authorization") authHeader: String,@Body body: VerifyTransAndAddToDBInputModel): Response<VerifyTransIdAndAddToDBOutputModel>
+//
+//    @GET("/api/api/v1/payment")
+//    suspend fun paymentHistory( @Header("authorization") authHeader: String): Response<PaymentHistoryOutputModel>
+
+
+
+
+
+
+
+
+
+
+
+    @POST("/api/v1/Users/signUp")
     suspend fun signUp(@Body body : SignUpInputModel) : Response<SignUpOutputModel>
-    @POST("/api/api/v1/Users/verifyEmail")
+    @POST("/api/v1/Users/verifyEmail")
     suspend fun verifyOTP(@Body body : VerifyOTPInputModel) : Response<VerifyOTPOutputModel>
-    @PATCH("/api/api/v1/Users/resendVerificationcode")
+    @PATCH("/api/v1/Users/resendVerificationcode")
     suspend fun resendVerificationCode(@Body body : ResendVerificationCodeInputModel) : Response<ResendVerificationOTPOutputModel>
-    @POST("/api/api/v1/Users/login")
+    @POST("/api/v1/Users/login")
     suspend fun loginUser(@Body body : LoginUserInputModel) : Response<LoginUserOutputModel>
-    @POST("/api/api/v1/Users/forgottenPassword")
+    @POST("/api/v1/Users/forgottenPassword")
     suspend fun forgottenPassword(@Body body : ForgottenPasswordInputModel) : Response<ForgottenPasswordOutputModel>
-    @PATCH("/api/api/v1/Users/resetPassword")
+    @PATCH("/api/v1/Users/resetPassword")
     suspend fun resetPassword(@Body body : ResetPasswordInputModel) : Response<ResetPasswordOutputModel>
-    @POST("/api/api/v1/bookname")
+    @POST("/api/v1/bookname")
     suspend fun createNewBook(@Body body : CreateNewBookInputModel, @Header("authorization") authHeader:String) : Response<CreateNewBookOutputModel>
-    @GET("/api/api/v1/bookname")
+    @GET("/api/v1/bookname")
     suspend fun getBooks(@Header("authorization") authHeader:String) : Response<GetBooksOutputModel>
-    @PATCH("/api/api/v1/bookname/{id}")
+    @PATCH("/api/v1/bookname/{id}")
     suspend fun updateBook(@Header("authorization") authHeader:String,@Path("id") otp: String?, @Body body : UpdateBookInputModel) : Response<UpdateBookOutputModel>
-    @DELETE("/api/api/v1/bookname/{id}")
+    @DELETE("/api/v1/bookname/{id}")
     suspend fun deleteBook(@Header("authorization") authHeader:String,@Path("id") otp: String?) : Response<DeleteBookOutputModel>
-    @POST("/api/api/v1/moneyTrans/{id}")
+    @POST("/api/v1/moneyTrans/{id}")
     suspend fun addMoneyTrans(@Header("authorization") authHeader:String,@Path("id") otp: String?,@Body body : AddMoneyTransInputModel) : Response<AddMoneyTransOutputModel>
-    @GET("/api/api/v1/moneyTrans/{id}")
+    @GET("/api/v1/moneyTrans/{id}")
     suspend fun getAllTrans(@Header("authorization") authHeader:String,@Path("id") otp: String?) : Response<GetAllTransOutputModel>
-    @PATCH("/api/api/v1/moneyTrans/{id}")
+    @PATCH("/api/v1/moneyTrans/{id}")
     suspend fun updateSingleTrans(@Header("authorization") authHeader:String,@Path("id") otp: String?,@Body body : UpdateSingleTransInputModel) : Response<UpdateSingleTransOutputModel>
-    @DELETE("/api/api/v1/moneyTrans/{id}")
+    @DELETE("/api/v1/moneyTrans/{id}")
     suspend fun deleteSingleTrans(@Header("authorization") authHeader:String,@Path("id") otp: String?) : Response<DeleteTransOutputModel>
-    @GET("/api/api/v1/moneyTrans/filter/{id}?")
+    @GET("/api/v1/moneyTrans/filter/{id}?")
     suspend fun getTransFilter(@Header("authorization") authHeader: String, @Path("id") id: String, @Query("type") type: String?, @Query("members") members: String?, @Query("date") date: String?, @Query("category") category: String?): Response<GetTransFilterOutputModel>
-    @GET("/api/api/v1/moneyTrans/basedOnCat/{id}?")
+    @GET("/api/v1/moneyTrans/basedOnCat/{id}?")
     suspend fun getDataBasedOnCategory(@Header("authorization") authHeader: String, @Path("id") id: String, ): Response<GetDataBasedOnCatOutputModel>
-    @PATCH("/api/api/v1/Users/updatePassword")
+    @PATCH("/api/v1/Users/updatePassword")
     suspend fun changePassword(@Header("authorization") authHeader: String, @Body body : ChangePasswordInputModel): Response<ChangePasswordOutputModel>
-    @PATCH("/api/api/v1/users")
+    @PATCH("/api/v1/users")
     suspend fun updateMe(@Header("authorization") authHeader: String, @Body body: UpdateUserInputModel?, ): Response<UpdateUserOutputModel>
-    @GET("/api/api/v1/users")
+    @GET("/api/v1/users")
     suspend fun getMe(@Header("authorization") authHeader: String, ): Response<GetMeOutputModel>
-    @GET("/api/api/v1/moneyTrans/download/{id}")
+    @GET("/api/v1/moneyTrans/download/{id}")
     @Streaming
     suspend fun downloadExcel( @Header("authorization") authHeader: String,@Path("id") id: String): Response<ResponseBody>
-    @GET("/api/api/v1/payment/getKeys/{amt}")
+    @GET("/api/v1/payment/getKeys/{amt}")
     suspend fun getKeys( @Header("authorization") authHeader: String,@Path("amt") amt: String): Response<GetKeysOutputModel>
 
-    @POST("/api/api/v1/payment")
+    @POST("/api/v1/payment")
     suspend fun verifyAndAddToDB( @Header("authorization") authHeader: String,@Body body: VerifyTransAndAddToDBInputModel): Response<VerifyTransIdAndAddToDBOutputModel>
 
-    @GET("/api/api/v1/payment")
+    @GET("/api/v1/payment")
     suspend fun paymentHistory( @Header("authorization") authHeader: String): Response<PaymentHistoryOutputModel>
 
 }

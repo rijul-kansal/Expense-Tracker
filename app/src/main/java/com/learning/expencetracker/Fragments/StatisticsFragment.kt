@@ -25,8 +25,6 @@ import com.learning.expencetracker.Utils.Constants
 import com.learning.expencetracker.ViewModel.BookViewModel
 import com.learning.expencetracker.ViewModel.MoneyTransViewModel
 import com.learning.expencetracker.databinding.FragmentStatisticsBinding
-import org.eazegraph.lib.models.PieModel
-import java.lang.Math.abs
 import java.util.Random
 
 
@@ -71,7 +69,6 @@ class StatisticsFragment : Fragment() {
                         cancelProgressBar()
                         try {
                             var lisAmountOut=ArrayList<GraphShownModel>()
-                            binding.piechart1.clearChart()
                             for(i in 0..result.data!!.data!!.size-1)
                             {
                                 val color = kotlin.math.abs(getRandomHex()).toString(16)
@@ -80,15 +77,9 @@ class StatisticsFragment : Fragment() {
                                         it,result.data!!.data?.get(i)!!.amountOut.toString())
                                 }?.let { lisAmountOut.add(it) }
 
-                                binding.piechart1.addPieSlice( PieModel(
-                                    "${result.data!!.data?.get(i)?._id}", (result.data!!.data?.get(i)!!.amountOut)!!.toFloat(),
-                                    Color.parseColor("#${color}")
-                                ))
                             }
-                            binding.piechart1.visibility = View.VISIBLE
-                            binding.piechart1.startAnimation()
                             adapterForAmountOut(lisAmountOut)
-                            viewModel.clearGetDataForCat()
+
                         }catch (err:Exception)
                         {
                             Log.d("rk",err.message.toString())
